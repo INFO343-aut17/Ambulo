@@ -45,8 +45,16 @@ export default class Dialog extends React.Component {
             justifyContent: "flex-end"
         }
         
+        let display = {
+            display: "initial"
+        }
+
         let title = {
             position: "absolute"
+        }
+
+        let text = {
+            textAlign: "right"
         }
 
         return(
@@ -54,14 +62,11 @@ export default class Dialog extends React.Component {
                  <Modal 
                     show={this.state.show}
                     onHide={close}>
-                    <ModalHeader>
-                        <div>
-                            <ModalTitle style={title}>{this.state.trailName}</ModalTitle>
-                            <p onClick={close}>close</p>
-                        </div>
-                    </ModalHeader>
- 
                     <ModalBody>
+                        <div className="row">
+                            <ModalTitle style={title} className="col">{this.state.trailName}</ModalTitle>
+                            <p className="col-12" onClick={close} style={text}>close</p>
+                        </div>
                     {this.state.moreInfo ?
 
                         <div>
@@ -109,11 +114,9 @@ export default class Dialog extends React.Component {
                             </div>
                         </div>
                     }
-                    </ModalBody>
-                    <ModalFooter>
-                        <button className="btn m-auto" style={transparent} 
+                    <button className="btn m-auto" style={transparent} 
                                 onClick={() => this.showMore()}><img src={more} style={adjust}/></button>
-                    </ModalFooter>
+                    </ModalBody>
                 </Modal>
             </div>
         );
