@@ -8,8 +8,6 @@ import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
 
-const TRAILS_API = "https://api.themoviedb.org/3/discover/movie?api_key=a1dd8a5a88583f8f8611af31ff17abba";
-
 export default class MainActivity extends React.Component {
     constructor(props) {
         super(props);
@@ -17,9 +15,13 @@ export default class MainActivity extends React.Component {
             show: false,
             trailName: "dummy",
             address: '',
-            faddress: undefined
+            lat: null,
+            lng: null,
+            faddress: undefined,
+            loading: false,
         }
-        this.onChange = (address) => this.setState({ address })
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSelect = this.handleSelect.bind(this)        
     }
 
     show(evt) {
@@ -28,6 +30,12 @@ export default class MainActivity extends React.Component {
             trailName: evt.target.innerHTML
         });
      }
+
+     handleChange(address) {
+        this.setState({
+          address: address
+        })
+    }
 
     handleSubmit(evt) {
         evt.preventDefault()
@@ -40,6 +48,32 @@ export default class MainActivity extends React.Component {
             faddress: this.state.address,
             show: false
         });
+    }
+
+    handleSelect(address) {
+        this.setState({
+          address,
+          show: false,
+          loading:true
+        })
+
+        geocodeByAddress(address)
+        .then((results) => getLatLng(results[0]))
+        .then(({ lat, lng }) => {
+          console.log('Success Yay', { lat, lng })
+          this.setState({
+            lat: lat,
+            lng: lng,
+            faddress: address,
+            loading: false
+          })
+        })
+        .catch((error) => {
+          console.log('Oh no!', error)
+          this.setState({
+            loading: false
+          })
+        })
     }
 
     prev() {
@@ -60,10 +94,19 @@ export default class MainActivity extends React.Component {
             bottom: "0",
             left: "0"
         }
+        const AutocompleteItem = ({ formattedSuggestion }) => (
+            <div className="Demo__suggestion-item">
+              <i className='fa fa-map-marker Demo__suggestion-icon'/>
+              <strong>{formattedSuggestion.mainText}</strong>{' '}
+              <small className="text-muted">{formattedSuggestion.secondaryText}</small>
+            </div>)
 
         const inputProps = {
+            type: "text",
             value: this.state.address,
-            onChange: this.onChange,
+            onChange: this.handleChange,
+            autoFocus: true,
+            placeholder: "Search Places",
         }
         const myStyles = {
             input: { border: 'none' }
@@ -75,13 +118,13 @@ export default class MainActivity extends React.Component {
         return(
             <div>
                 {
-                    this.state.faddress == undefined ?
+                    this.state.faddress == undefined && !this.state.loading ?
                     <div className="d-flex justify-content-center" style={style}>
                         <div className="align-self-center">
-                            <h1>AMBULO</h1>
+                            <h1 className="mb-4">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                    <PlacesAutocomplete classNames={cssClasses} styles={myStyles} inputProps={inputProps} />
+                                    <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                     <button className="btn search-btn"><i class="fa fa-search"></i></button>
                                 </form>
                             </div>

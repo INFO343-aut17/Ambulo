@@ -40,3 +40,11 @@
   -webkit-box-shadow:none !important; 
   border:none !important;
 }
+.Demo__suggestion-icon {
+  margin-right: 8px;
+}
+
+.Demo__suggestion-item {
+  padding: 4px;
+  text-align: left;
+}
