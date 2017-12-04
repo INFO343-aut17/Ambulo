@@ -65,6 +65,12 @@ export default class MainActivity extends React.Component {
             value: this.state.address,
             onChange: this.onChange,
         }
+        const myStyles = {
+            input: { border: 'none' }
+        }
+        const cssClasses = {
+            input: 'search-bar'
+        }
         
         return(
             <div>
@@ -73,10 +79,12 @@ export default class MainActivity extends React.Component {
                     <div className="d-flex justify-content-center" style={style}>
                         <div className="align-self-center">
                             <h1>AMBULO</h1>
-                            <form onSubmit={evt => this.handleSubmit(evt)}>
-                                <PlacesAutocomplete inputProps={inputProps} />
-                                <button className="btn">search</button>
-                            </form>
+                            <div className="search-box">
+                                <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
+                                    <PlacesAutocomplete classNames={cssClasses} styles={myStyles} inputProps={inputProps} />
+                                    <button className="btn search-btn"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
                         </div>
                     </div> 
                     :
