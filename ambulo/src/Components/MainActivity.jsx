@@ -3,7 +3,13 @@ import constants from "./constants";
 import { Link } from "react-router-dom";
 import Search from "./search.jsx"
 
+import After from "../after.svg";
+import Before from "../before.svg";
 import Dialog from "./Dialog";
+import Trail from "./Trail";
+
+import Instafeed from "react-instafeed";
+
 
 
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
@@ -24,7 +30,7 @@ export default class MainActivity extends React.Component {
             show: true,
             trailName: evt.target.innerHTML
         });
-    }
+     }
 
     handleSubmit() {
         this.setState({
@@ -33,6 +39,7 @@ export default class MainActivity extends React.Component {
         });
     }
 
+
     handleSubmit2(evt) {
         evt.preventDefault()
 
@@ -40,6 +47,13 @@ export default class MainActivity extends React.Component {
         .then(results => getLatLng(results[0]))
         .then(latLng => console.log('Success', latLng))
         .catch(error => console.error('Error', error))
+    }
+    prev() {
+        alert("prev");
+    }
+
+    next() {
+        alert("next");
     }
     
     render() {
@@ -80,21 +94,8 @@ export default class MainActivity extends React.Component {
                                 :
                                 <div>
                                     <h2>{this.state.query}</h2>
-                                    <h3 className="btn" onClick={evt => this.show(evt)}>Trail Name</h3>
-                                    <div className="row">
-                                        <div className="col">1</div>
-                                        <div className="col">2</div>
-                                        <div className="col">3</div>
-                                        <div className="col">4</div>
-                                    </div>
+                                        <Trail/>
 
-                                    <h3 className="btn" onClick={evt => this.show(evt)}>Trail Name2</h3>
-                                    <div className="row">
-                                        <div className="col">1</div>
-                                        <div className="col">2</div>
-                                        <div className="col">3</div>
-                                        <div className="col">4</div>
-                                    </div>
                                 </div>
                             }
 
