@@ -1,28 +1,25 @@
 import React from "react";
 import constants from "./constants";
 import { Link } from "react-router-dom";
-import Search from "./search.jsx"
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import After from "../after.svg";
 import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
 
-import Instafeed from "react-instafeed";
-
-
-
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+const TRAILS_API = "https://api.themoviedb.org/3/discover/movie?api_key=a1dd8a5a88583f8f8611af31ff17abba";
 
 export default class MainActivity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            query: undefined,
             show: false,
             trailName: "dummy",
-            address: "x"
+            address: '',
+            faddress: undefined
         }
+        this.onChange = (address) => this.setState({ address })
     }
 
     show(evt) {
@@ -32,22 +29,19 @@ export default class MainActivity extends React.Component {
         });
      }
 
-    handleSubmit() {
-        this.setState({
-            query: this.refs.location.value,
-            show: false
-        });
-    }
-
-
-    handleSubmit2(evt) {
+    handleSubmit(evt) {
         evt.preventDefault()
-
         geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => console.log('Success', latLng))
         .catch(error => console.error('Error', error))
+
+        this.setState({
+            faddress: this.state.address,
+            show: false
+        });
     }
+
     prev() {
         alert("prev");
     }
@@ -66,16 +60,23 @@ export default class MainActivity extends React.Component {
             bottom: "0",
             left: "0"
         }
+
+        const inputProps = {
+            value: this.state.address,
+            onChange: this.onChange,
+        }
         
         return(
             <div>
                 {
-                    this.state.query == undefined ?
+                    this.state.faddress == undefined ?
                     <div className="d-flex justify-content-center" style={style}>
                         <div className="align-self-center">
                             <h1>AMBULO</h1>
-                            <Search function={evt => {this.handleSubmit2(evt)}}/>
-                            <p onClick={() => {this.setState({query: ""})}}>skip</p>
+                            <form onSubmit={evt => this.handleSubmit(evt)}>
+                                <PlacesAutocomplete inputProps={inputProps} />
+                                <button className="btn">search</button>
+                            </form>
                         </div>
                     </div> 
                     :
@@ -89,13 +90,12 @@ export default class MainActivity extends React.Component {
                         <Dialog modal={this.state.show}
                                 trailName={this.state.trailName}/>
                         <div className="d-flex flex-column">
-                            {this.state.query == "" ?
+                            {this.state.faddress == "" ?
                                 <h3>default(?)</h3>
                                 :
                                 <div>
-                                    <h2>{this.state.query}</h2>
+                                    <h2>{this.state.address}</h2>
                                         <Trail/>
-
                                 </div>
                             }
 
