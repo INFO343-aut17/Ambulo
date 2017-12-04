@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 import After from "../after.svg";
 import Before from "../before.svg";
-
 import Dialog from "./Dialog";
+import Trail from "./Trail";
 
 import Instafeed from "react-instafeed";
+
 
 export default class MainActivity extends React.Component {
     constructor(props) {
@@ -20,13 +21,6 @@ export default class MainActivity extends React.Component {
     }
 
     componentDidMount() {
-    }
-
-    show(evt) {
-        this.setState({
-            show: true,
-            trailName: evt.target.innerHTML
-        });
     }
 
     handleSubmit() {
@@ -54,8 +48,6 @@ export default class MainActivity extends React.Component {
             bottom: "0",
             left: "0"
         }
-
-        const instafeedTarget = 'instafeed';
         
         return(
             <div>
@@ -86,36 +78,14 @@ export default class MainActivity extends React.Component {
                                 <button className="btn">search</button>
                         </form>
                         </div>
-                        <Dialog modal={this.state.show}
-                                trailName={this.state.trailName}/>
                         <div className="d-flex flex-column">
                             {this.state.query == "" ?
                                 <h3>default(?)</h3>
                                 :
                                 <div>
                                     <h2>{this.state.query}</h2>
-                                    <h3 className="btn" onClick={evt => this.show(evt)}>Trail Name</h3>
-                                    <div className="row">
-                                        <img className="col" src={Before} onClick={() => this.prev()}/>
-                                        <div className="col">1</div>
-                                        <div className="col">2</div>
-                                        <div className="col">3</div>
-                                        <div className="col">4</div>
-                                        <img className="col" src={After} onClick={() => this.next()}/>
-                                    </div>
+                                        <Trail/>
 
-                                    <h3 className="btn" onClick={evt => this.show(evt)}>Trail Name2</h3>
-                                    <div className="row">
-                                        <img className="col" src={Before} onClick={() => this.prev()}/>
-                                        <div className="col">1</div>
-                                        <div className="col">2</div>
-                                        <div className="col">3</div>
-                                        <div className="col">4</div>
-                                        <img className="col" src={After} onClick={() => this.next()}/>
-                                    </div>
-                                    <div>
-                                        testing
-                                    </div>
                                 </div>
                             }
 
