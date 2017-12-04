@@ -1,6 +1,7 @@
 import React from "react";
 import constants from "./constants";
 import { Link } from "react-router-dom";
+import Search from "./search.jsx"
 
 import After from "../after.svg";
 import Before from "../before.svg";
@@ -10,18 +11,26 @@ import Trail from "./Trail";
 import Instafeed from "react-instafeed";
 
 
+
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+
 export default class MainActivity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             query: undefined,
             show: false,
-            trailName: "dummy"
+            trailName: "dummy",
+            address: "x"
         }
     }
 
-    componentDidMount() {
-    }
+    show(evt) {
+        this.setState({
+            show: true,
+            trailName: evt.target.innerHTML
+        });
+     }
 
     handleSubmit() {
         this.setState({
@@ -30,6 +39,15 @@ export default class MainActivity extends React.Component {
         });
     }
 
+
+    handleSubmit2(evt) {
+        evt.preventDefault()
+
+        geocodeByAddress(this.state.address)
+        .then(results => getLatLng(results[0]))
+        .then(latLng => console.log('Success', latLng))
+        .catch(error => console.error('Error', error))
+    }
     prev() {
         alert("prev");
     }
@@ -56,12 +74,7 @@ export default class MainActivity extends React.Component {
                     <div className="d-flex justify-content-center" style={style}>
                         <div className="align-self-center">
                             <h1>AMBULO</h1>
-                            <div>
-                            <form onSubmit={() => this.handleSubmit()}>
-                                <input type="text" placeholder="enter location" ref="location"/>
-                                    <button className="btn">search</button>
-                            </form>
-                            </div>
+                            <Search function={evt => {this.handleSubmit2(evt)}}/>
                             <p onClick={() => {this.setState({query: ""})}}>skip</p>
                         </div>
                     </div> 
@@ -73,11 +86,8 @@ export default class MainActivity extends React.Component {
                         </div>
                         <h1>AMBULO</h1>
                         <div>
-                        <form onSubmit={() => this.handleSubmit()}>
-                            <input type="text" placeholder="enter location" defaultValue={this.state.query} ref="location"/>
-                                <button className="btn">search</button>
-                        </form>
-                        </div>
+                        <Dialog modal={this.state.show}
+                                trailName={this.state.trailName}/>
                         <div className="d-flex flex-column">
                             {this.state.query == "" ?
                                 <h3>default(?)</h3>
@@ -90,10 +100,10 @@ export default class MainActivity extends React.Component {
                             }
 
                         </div>
+                        </div>
                     </div>
                 }
             </div>
-
         );
     }
 }
