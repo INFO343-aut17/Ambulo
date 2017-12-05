@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import constants from "./constants";
 import firebase from "firebase/app";
 
-export default class Search extends React.Component {
+export default class Map extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,7 +12,8 @@ export default class Search extends React.Component {
 
     render() {
         return(
-
+          <div>
+          </div>
         );
     }
 }
