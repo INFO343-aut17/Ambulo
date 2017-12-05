@@ -77,35 +77,54 @@ export default class MainActivity extends React.Component {
           })
         })
 
-        console.log(this.state.address);
+        // console.log(this.state.address);
         var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
         var flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
 
-        
+
         geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
-            console.log(latLng.lat);
-            console.log(latLng.lng);
+            // console.log(latLng.lat);
+            // console.log(latLng.lng);
             unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
             .headers({'X-Mashape-Key' : 'hsP83XHk7umshDDsGOjuYJhfAESEp1vqarjjsnh1m2hxpTGbhC'})
             .end(function (response) {
                 var places = [];
+                // places.push("hello");
+                // console.log(places);
+                // console.log(places.length);
                 response.body.places.forEach(function(element) {
-                    console.log(element.name + " " + element.city + " " + element.state + " " + element.lat + " " + element.lon);
+                    // console.log(element.name + " " + element.city + " " + element.state + " " + element.lat + " " + element.lon);
+                    var object = {
+                        name: element.name,
+                        city: element.city,
+                        state: element.state,
+                        lat: element.lat,
+                        lon: element.lon
+                    };
                     var tags = element.name.replace(/ /g, "+");
                     fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
                             + "&sort=relevance&format=json&nojsoncallback=1")
                     .then(response => {
-                        console.log(response)
+                        return response.json()
+                    })
+                    .then(data => {
+                        object.photos = data.photos.photo;
+                        // console.log(object);
+                        places.push(object);
+
                     })
                     .catch(error => console.error('Error', error));
-                    // fetch flickr
-                    // filter photos with trail name
-                    // attach photo array to place item
-                    // attach place item to place array
                 });
-                // sort trails by number of flickr photos
+                
+                places.sort(function (a, b) {
+                    return a.photos.length - b.photos.length
+                })
+                
+                console.log(places);
+                
+                // console.log(places[0]);
             });
         })
         .catch(error => console.error('Error', error));
