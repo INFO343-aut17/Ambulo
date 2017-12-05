@@ -21,6 +21,7 @@ export default class MainActivity extends React.Component {
             lng: null,
             faddress: undefined,
             loading: false,
+            photos2DArr: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSelect = this.handleSelect.bind(this)        
@@ -72,58 +73,78 @@ export default class MainActivity extends React.Component {
           })
         })
 
-        // console.log(this.state.address);
-        var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-        var flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
-
+        let flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
+        let flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
 
         geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
-            // console.log(latLng.lat);
-            // console.log(latLng.lng);
-            unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
-            .headers({'X-Mashape-Key' : 'hsP83XHk7umshDDsGOjuYJhfAESEp1vqarjjsnh1m2hxpTGbhC'})
-            .end(function (response) {
-                var places = [];
-                // places.push("hello");
-                // console.log(places);
-                // console.log(places.length);
-                response.body.places.forEach(function(element) {
-                    // console.log(element.name + " " + element.city + " " + element.state + " " + element.lat + " " + element.lon);
-                    var object = {
-                        name: element.name,
-                        city: element.city,
-                        state: element.state,
-                        lat: element.lat,
-                        lon: element.lon
-                    };
-                    var tags = element.name.replace(/ /g, "+");
-                    fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
-                            + "&sort=relevance&format=json&nojsoncallback=1")
+            // Send a request to trailapi to get a list of trails at this specific location.
+            // Return a promise and on success, resolve with the response body (places arr)
+            return new Promise((resolve, reject) => {
+                unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
+                   .header('X-Mashape-Key','hsP83XHk7umshDDsGOjuYJhfAESEp1vqarjjsnh1m2hxpTGbhC',)
+                   .header("Accept", "text/json")
+                   .end((response) => {
+                        if (response) {
+                            resolve(response.body.places);
+                        } else {
+                            reject(response);
+                        }
+                   })
+                })
+        })
+        // Successfully got the array of places from the trails api request, set the state of the program to have
+        // all the trails.
+        .then((placesArr) => {
+            let photos2DArrTemp = [];
+            placesArr.forEach(function(place) {
+                let placeObj = {
+                    name: place.name,
+                    city: place.city,
+                    state: place.state,
+                    lat: place.lat,
+                    lon: place.lon
+                };
+
+                // Send a request to flickr for photos matching a trail.
+                let tags = placeObj.name.replace(/ /g, "+");
+                fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + placeObj.lat + "&lon=" + placeObj.lon
+                    + "&sort=relevance&format=json&nojsoncallback=1")
                     .then(response => {
                         return response.json()
-                    })
-                    .then(data => {
-                        object.photos = data.photos.photo;
-                        // console.log(object);
-                        places.push(object);
-                    })
-                    .catch(error => console.error('Error', error));
-                });
-                
-                places.sort(function (a, b) {
-                    return a.photos.length - b.photos.length
-                })
+                    }).then((photosObj) =>{
+                        // Iterate through photosArr and append the photosURL;
+                        let photosURL = [];
+                        let photosArr = photosObj.photos.photo;
+                        let numPhotos = parseInt(photosObj.photos.total);
 
-                
-                console.log(places[0]);
-            });
+                        photosArr.forEach((photo) => {
+                            // Generate a url using the parsed information for json.
+                            let photoID = photo.id;
+                            let farmID = photo.farm;
+                            let secretID = photo.secret;
+                            let serverID = photo.server;
+                            let url = `https://farm${farmID}.staticflickr.com/${serverID}/${photoID}_${secretID}.jpg`
+                            photosURL.push(url);
+                        });
+                        // Push the array to our array of results.
+                        photos2DArrTemp.push(photosURL);
+                    })
+                    .catch((err) => console.log(err));
+            })
+
+            // Now have an array of urls. Need to sort and remove empty arrays.
+            console.log(photos2DArrTemp);
+
+            // Change the state of 2D field.
+            this.setState({
+                photos2DArr: photos2DArrTemp
+            })
         })
         .catch(error => console.error('Error', error));
     }
         
-
     prev() {
         alert("prev");
     }
@@ -187,7 +208,7 @@ export default class MainActivity extends React.Component {
                                 <div className="search-box">
                                     <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                         <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                        <button className="btn search-btn"><i class="fa fa-search"></i></button>
+                                        <button className="btn search-btn"><i className="fa fa-search"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -201,7 +222,7 @@ export default class MainActivity extends React.Component {
                                 <div className="m-auto col-sm-5 col-md-4 col-xl-2 col-11 search-box">
                                     <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                     <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                        <button className="btn search-btn"><i class="fa fa-search"></i></button>
+                                        <button className="btn search-btn"><i className="fa fa-search"></i></button>
                                     </form>
                                 </div>
                             </div>
