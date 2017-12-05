@@ -13,6 +13,7 @@
 .search-btn {
   border: none;
   outline: none !important;
+  background-color: white;
   color: #ddd;
   transition: all 0.5s ease;
 }
