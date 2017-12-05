@@ -8,6 +8,8 @@ import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
 
+import unirest from "unirest";
+
 export default class MainActivity extends React.Component {
     constructor(props) {
         super(props);
@@ -38,11 +40,6 @@ export default class MainActivity extends React.Component {
     }
 
     handleSubmit(evt) {
-        evt.preventDefault()
-        geocodeByAddress(this.state.address)
-        .then(results => getLatLng(results[0]))
-        .then(latLng => console.log('Success', latLng))
-        .catch(error => console.error('Error', error))
 
         this.setState({
             faddress: this.state.address,
@@ -74,6 +71,39 @@ export default class MainActivity extends React.Component {
             loading: false
           })
         })
+
+        console.log(this.state.address);
+        var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
+        var flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
+
+        
+        geocodeByAddress(this.state.address)
+        .then(results => getLatLng(results[0]))
+        .then(latLng => {
+            console.log(latLng.lat);
+            console.log(latLng.lng);
+            unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
+            .headers({'X-Mashape-Key' : 'hsP83XHk7umshDDsGOjuYJhfAESEp1vqarjjsnh1m2hxpTGbhC'})
+            .end(function (response) {
+                var places = [];
+                response.body.places.forEach(function(element) {
+                    console.log(element.name + " " + element.city + " " + element.state + " " + element.lat + " " + element.lon);
+                    var tags = element.name.replace(/ /g, "+");
+                    fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
+                            + "&sort=relevance&format=json&nojsoncallback=1")
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => console.error('Error', error));
+                    // fetch flickr
+                    // filter photos with trail name
+                    // attach photo array to place item
+                    // attach place item to place array
+                });
+                // sort trails by number of flickr photos
+            });
+        })
+        .catch(error => console.error('Error', error));
     }
 
     prev() {
@@ -114,6 +144,13 @@ export default class MainActivity extends React.Component {
         const cssClasses = {
             input: 'search-bar'
         }
+
+        const options = {
+            types: ['(cities)'],
+            componentRestrictions: {
+                country: "us"
+            }
+        }
         
         return(
             <div>
@@ -124,7 +161,7 @@ export default class MainActivity extends React.Component {
                             <h1 className="mb-4">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                    <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                     <button className="btn search-btn"><i class="fa fa-search"></i></button>
                                 </form>
                             </div>
