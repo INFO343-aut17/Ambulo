@@ -20,10 +20,11 @@ export default class MainActivity extends React.Component {
             lat: null,
             lng: null,
             faddress: undefined,
+            error: '',
             loading: false,
         }
         this.handleChange = this.handleChange.bind(this)
-        this.handleSelect = this.handleSelect.bind(this)        
+        this.handleSelect = this.handleSelect.bind(this)      
     }
 
     show(evt) {
@@ -40,20 +41,48 @@ export default class MainActivity extends React.Component {
     }
 
     handleSubmit(evt) {
-
-        this.setState({
+        console.log(this.state.faddress)
+        console.log(this.state.error)
+        geocodeByAddress(this.state.faddress)
+        .then((results) => getLatLng(results[0]))
+        .then(({ lat, lng }) => {
+          console.log('Success Yay', { lat, lng })
+          this.setState({
+            lat: lat,
+            lng: lng,
             faddress: this.state.address,
-            show: false
-        });
+            loading: false,
+            error: ""
+          })
+        })
+        .catch((error) => {
+          console.log('Oh no!', error)
+          this.setState({
+            faddress: undefined,
+            error: "Enter Valid Address"
+          })
+        })
+    }
+
+    handleEnter(address) {
+        geocodeByAddress(address)
+        .then((results) => getLatLng(results[0]))
+        .then(({ lat, lng }) => {
+            console.log('Success Yay', { lat, lng })
+            this.setState({
+                lat: lat,
+                lng: lng,
+                faddress: address,
+                loading: false,
+                error: ""
+            })
+        })
+        .catch((error) => {
+            console.log('Oh no!', error)
+        })
     }
 
     handleSelect(address) {
-        this.setState({
-          address,
-          show: false,
-          loading:true
-        })
-
         geocodeByAddress(address)
         .then((results) => getLatLng(results[0]))
         .then(({ lat, lng }) => {
@@ -61,14 +90,17 @@ export default class MainActivity extends React.Component {
           this.setState({
             lat: lat,
             lng: lng,
+            address: address,
             faddress: address,
-            loading: false
+            loading: false,
+            error: ""
           })
         })
         .catch((error) => {
           console.log('Oh no!', error)
           this.setState({
-            loading: false
+            faddress: undefined,
+            error: "Enter Valid Address"
           })
         })
 
@@ -77,7 +109,7 @@ export default class MainActivity extends React.Component {
         var flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
 
 
-        geocodeByAddress(this.state.address)
+        geocodeByAddress(this.state.faddress)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
             // console.log(latLng.lat);
@@ -108,6 +140,7 @@ export default class MainActivity extends React.Component {
                         object.photos = data.photos.photo;
                         // console.log(object);
                         places.push(object);
+                        console.log(places)
                     })
                     .catch(error => console.error('Error', error));
                 });
@@ -178,7 +211,7 @@ export default class MainActivity extends React.Component {
                     <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
                 {
-                    this.state.faddress == undefined && !this.state.loading ?
+                    this.state.faddress === undefined || this.state.error == "Enter Valid Address"  ?
                     <div>
                         <div className="content row d-flex justify-content-center" style={style}>
                             <div className="header col-xl-7 col-11 align-self-center">
@@ -186,7 +219,7 @@ export default class MainActivity extends React.Component {
                                 <p className="sub text-left mb-5">Discover trails and capture natural scenery.</p>
                                 <div className="search-box">
                                     <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                        <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                        <PlacesAutocomplete options={options} onEnterKeyDown={this.handleEnter} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                         <button className="btn search-btn"><i class="fa fa-search"></i></button>
                                     </form>
                                 </div>
@@ -199,10 +232,7 @@ export default class MainActivity extends React.Component {
                             <h1 className="green mb-3">Ambulo</h1>
                             <div className="row">
                                 <div className="m-auto col-sm-5 col-md-4 col-xl-2 col-11 search-box">
-                                    <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                        <button className="btn search-btn"><i class="fa fa-search"></i></button>
-                                    </form>
+                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleEnter} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                 </div>
                             </div>
                         </div>
