@@ -2,7 +2,7 @@
   border-radius: 3px;
   background: #ffffff;
   border: 1px solid #ddd;
-  padding: 8px 15px 8px 15px;
+  padding: 10px 15px 10px 15px;
   transition: all 0.5s ease;
 }
 
@@ -18,15 +18,13 @@
   transition: all 0.5s ease;
   position: absolute;
   top: -4pxpx;
-  right: -15px;
+  right: -5px;
   background-color: white;
 }
 
-#PlacesAutocomplete_autocomplete-container {
-  z-index: 9999 !important;
+input {
+  font-size: 19px;
 }
-
-
 
 .search-form {
   position: relative;
@@ -49,8 +47,8 @@
 
 .search-bar {
   outline: none !important;
-  border:none !important;
   width: 100% !important;
+  border:none !important;
 }
 
 .search-bar:focus {

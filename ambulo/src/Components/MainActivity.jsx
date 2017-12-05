@@ -92,7 +92,10 @@ export default class MainActivity extends React.Component {
                     fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
                             + "&sort=relevance&format=json&nojsoncallback=1")
                     .then(response => {
-                        console.log(response)
+                        return response.json()
+                    })
+                    .then(data => {
+                        console.log(data.photos.photo)
                     })
                     .catch(error => console.error('Error', error));
                     // fetch flickr
@@ -140,7 +143,8 @@ export default class MainActivity extends React.Component {
             placeholder: "Search Places",
         }
         const myStyles = {
-            input: { border: 'none' }
+            input: { border: 'none' },
+            autocompleteContainer: { zIndex: '9999' }
         }
         const cssClasses = {
             input: 'search-bar'
@@ -158,8 +162,8 @@ export default class MainActivity extends React.Component {
                 {
                     this.state.faddress == undefined && !this.state.loading ?
                     <div className="content row d-flex justify-content-center" style={style}>
-                        <div className="header col-md-6 col-10 align-self-center">
-                            <h1 className="mb-4">AMBULO</h1>
+                        <div className="header col-md-8 col-xl-6 col-10 align-self-center">
+                            <h1 className="mb-4 display-1">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                     <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
@@ -175,7 +179,7 @@ export default class MainActivity extends React.Component {
                             <button className="btn" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                         </div>
                         <div className="align-self-center">
-                            <h1>AMBULO</h1>
+                            <h1 className="display-1">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                     <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
