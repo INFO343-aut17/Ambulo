@@ -40,11 +40,6 @@ export default class MainActivity extends React.Component {
     }
 
     handleSubmit(evt) {
-        evt.preventDefault()
-        geocodeByAddress(this.state.address)
-        .then(results => getLatLng(results[0]))
-        .then(latLng => console.log('Success', latLng))
-        .catch(error => console.error('Error', error))
 
         this.setState({
             faddress: this.state.address,
@@ -110,10 +105,14 @@ export default class MainActivity extends React.Component {
                         return response.json()
                     })
                     .then(data => {
+<<<<<<< HEAD
                         object.photos = data.photos.photo;
                         // console.log(object);
                         places.push(object);
 
+=======
+                        console.log(data.photos.photo)
+>>>>>>> d874d78a778d5624f7ac3c9ca7d898c05ead5bf3
                     })
                     .catch(error => console.error('Error', error));
                 });
@@ -164,7 +163,8 @@ export default class MainActivity extends React.Component {
             placeholder: "Search Places",
         }
         const myStyles = {
-            input: { border: 'none' }
+            input: { border: 'none' },
+            autocompleteContainer: { zIndex: '9999' }
         }
         const cssClasses = {
             input: 'search-bar'
@@ -182,8 +182,8 @@ export default class MainActivity extends React.Component {
                 {
                     this.state.faddress == undefined && !this.state.loading ?
                     <div className="content row d-flex justify-content-center" style={style}>
-                        <div className="header col-md-6 col-10 align-self-center">
-                            <h1 className="mb-4">AMBULO</h1>
+                        <div className="header col-md-8 col-xl-6 col-10 align-self-center">
+                            <h1 className="mb-4 display-1">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                     <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
@@ -199,7 +199,7 @@ export default class MainActivity extends React.Component {
                             <button className="btn" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                         </div>
                         <div className="align-self-center">
-                            <h1>AMBULO</h1>
+                            <h1 className="display-1">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                     <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
