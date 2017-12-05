@@ -1,13 +1,12 @@
 import React from "react";
 import constants from "./constants";
+import config from "./config";  // Holds our api keys
 import { Link } from "react-router-dom";
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-
 import After from "../after.svg";
 import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
-
 import unirest from "unirest";
 
 export default class MainActivity extends React.Component {
@@ -73,9 +72,6 @@ export default class MainActivity extends React.Component {
           })
         })
 
-        let flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-        let flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
-
         geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
@@ -83,7 +79,7 @@ export default class MainActivity extends React.Component {
             // Return a promise and on success, resolve with the response body (places arr)
             return new Promise((resolve, reject) => {
                 unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
-                   .header('X-Mashape-Key','hsP83XHk7umshDDsGOjuYJhfAESEp1vqarjjsnh1m2hxpTGbhC',)
+                   .header('X-Mashape-Key', config.api_keys.trailapi_key,)
                    .header("Accept", "text/json")
                    .end((response) => {
                         if (response) {
@@ -108,8 +104,9 @@ export default class MainActivity extends React.Component {
                 };
 
                 // Send a request to flickr for photos matching a trail.
+                let flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
                 let tags = placeObj.name.replace(/ /g, "+");
-                fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + placeObj.lat + "&lon=" + placeObj.lon
+                fetch(flickr + "&api_key=" + config.api_keys.flickr_key + "&tags=" + tags + "&lat=" + placeObj.lat + "&lon=" + placeObj.lon
                     + "&sort=relevance&format=json&nojsoncallback=1")
                     .then(response => {
                         return response.json()
@@ -117,7 +114,6 @@ export default class MainActivity extends React.Component {
                         // Iterate through photosArr and append the photosURL;
                         let photosURL = [];
                         let photosArr = photosObj.photos.photo;
-                        let numPhotos = parseInt(photosObj.photos.total);
 
                         photosArr.forEach((photo) => {
                             // Generate a url using the parsed information for json.
@@ -199,7 +195,7 @@ export default class MainActivity extends React.Component {
                     <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
                 {
-                    this.state.faddress == undefined && !this.state.loading ?
+                    this.state.faddress === undefined && !this.state.loading ?
                     <div>
                         <div className="content row d-flex justify-content-center" style={style}>
                             <div className="header col-xl-7 col-11 align-self-center">
@@ -231,7 +227,7 @@ export default class MainActivity extends React.Component {
                         <Dialog modal={this.state.show}
                                 trailName={this.state.trailName}/>
                         <div className="d-flex flex-column">
-                            {this.state.faddress == "" ?
+                            {this.state.faddress === "" ?
                                 <h3>default(?)</h3>
                                 :
                                 <div>
