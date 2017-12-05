@@ -105,6 +105,7 @@ export default class MainActivity extends React.Component {
         })
         .catch(error => console.error('Error', error));
     }
+        
 
     prev() {
         alert("prev");
