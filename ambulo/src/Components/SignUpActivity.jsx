@@ -6,7 +6,7 @@ import firebase from "firebase/app";
 export default class SignUpActivity extends React.Component {
     constructor(props) {
         super(props);
-        
+
         // Default State
         this.state = {
             email: "",
@@ -36,13 +36,16 @@ export default class SignUpActivity extends React.Component {
                         displayName: this.state.displayName,
                     }).then(() => {
                         this.setState({authenticated: true});
-                        this.props.history.push(constants.routes.home);   
-                    }) 
+                        this.props.history.push(constants.routes.home);
+                    }).then(() => {
+                      // add user to database for future Favorites
+                      firebase.database().ref("users").push(user.uid);
+                    })
                     .catch((err) => {
                         alert(err.message);
                     });
                 })
-                // Failure. 
+                // Failure.
                 .catch(err => {
                     alert(err.message);
                 });
@@ -83,7 +86,6 @@ export default class SignUpActivity extends React.Component {
                                     onInput={evt => this.setState({displayName: evt.target.value})}
                                     />
                                 </div>
-                                <div className="form-group">
                                     <input id="email" type="email" className="form-control" placeholder="enter your email" 
                                     value={this.state.email}
                                     onInput={evt => this.setState({email: evt.target.value})}
