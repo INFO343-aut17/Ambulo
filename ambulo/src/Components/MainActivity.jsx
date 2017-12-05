@@ -105,14 +105,10 @@ export default class MainActivity extends React.Component {
                         return response.json()
                     })
                     .then(data => {
-<<<<<<< HEAD
                         object.photos = data.photos.photo;
                         // console.log(object);
                         places.push(object);
 
-=======
-                        console.log(data.photos.photo)
->>>>>>> d874d78a778d5624f7ac3c9ca7d898c05ead5bf3
                     })
                     .catch(error => console.error('Error', error));
                 });
