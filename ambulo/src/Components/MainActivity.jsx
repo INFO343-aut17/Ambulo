@@ -134,7 +134,6 @@ export default class MainActivity extends React.Component {
     
     render() {
         let style = {
-            border: "5px solid red",
             position: "absolute",
             margin: "auto",
             top: "0",
@@ -173,16 +172,18 @@ export default class MainActivity extends React.Component {
         
         return(
             <div>
+                <div className="p-4 d-flex justify-content-end">
+                    <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                    <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                </div>
                 {
                     this.state.faddress == undefined && !this.state.loading ?
                     <div>
-                        <div className="d-flex justify-content-end">
-                            <button className="btn" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                            <button className="btn" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
-                        </div>
                         <div className="content row d-flex justify-content-center" style={style}>
-                            <div className="header col-md-8 col-xl-6 col-10 align-self-center">
-                                <h1 className="mb-4">Ambulo</h1>
+                            <div className="header col-xl-7 col-11 align-self-center">
+                                <h1 className="mt-0 text-left green mb-0">Ambulo</h1>
+                                <p className="sub text-left mb-5">Discover trails and capture natural scenery.</p>
                                 <div className="search-box">
                                     <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
                                         <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
@@ -194,17 +195,15 @@ export default class MainActivity extends React.Component {
                     </div>
                     :
                     <div>
-                        <div className="d-flex justify-content-end">
-                            <button className="btn" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                            <button className="btn" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
-                        </div>
-                        <div className="align-self-center">
-                            <h1>Ambulo</h1>
-                            <div className="search-box">
-                                <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                    <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                    <button className="btn search-btn"><i class="fa fa-search"></i></button>
-                                </form>
+                        <div className="align-self-center mb-5">
+                            <h1 className="green mb-3">Ambulo</h1>
+                            <div className="row">
+                                <div className="m-auto col-sm-5 col-md-4 col-xl-2 col-11 search-box">
+                                    <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
+                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                        <button className="btn search-btn"><i class="fa fa-search"></i></button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -215,7 +214,7 @@ export default class MainActivity extends React.Component {
                                 <h3>default(?)</h3>
                                 :
                                 <div>
-                                    <h2>{this.state.address}</h2>
+                                    <h2>{this.state.faddress}</h2>
                                         <Trail/>
                                 </div>
                             }
