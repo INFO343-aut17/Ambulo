@@ -119,8 +119,8 @@ export default class MainActivity extends React.Component {
             <div>
                 {
                     this.state.faddress == undefined && !this.state.loading ?
-                    <div className="d-flex justify-content-center" style={style}>
-                        <div className="align-self-center">
+                    <div className="content row d-flex justify-content-center" style={style}>
+                        <div className="header col-md-6 col-10 align-self-center">
                             <h1 className="mb-4">AMBULO</h1>
                             <div className="search-box">
                                 <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
@@ -136,7 +136,15 @@ export default class MainActivity extends React.Component {
                             <button className="btn" onClick={() => {this.props.history.push("/login")}}>log in</button>
                             <button className="btn" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                         </div>
-                        <h1>AMBULO</h1>
+                        <div className="align-self-center">
+                            <h1>AMBULO</h1>
+                            <div className="search-box">
+                                <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
+                                    <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                    <button className="btn search-btn"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
+                        </div>
                         <div>
                         <Dialog modal={this.state.show}
                                 trailName={this.state.trailName}/>

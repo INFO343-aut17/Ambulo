@@ -2,9 +2,10 @@
   border-radius: 3px;
   background: #ffffff;
   border: 1px solid #ddd;
-  padding: 4px 0px 4px 15px;
+  padding: 8px 15px 8px 15px;
   transition: all 0.5s ease;
 }
+
 
 .search-box:active, .search-box:hover {
   border: 1px solid #aaa;
@@ -13,9 +14,22 @@
 .search-btn {
   border: none;
   outline: none !important;
-  background-color: white;
   color: #ddd;
   transition: all 0.5s ease;
+  position: absolute;
+  top: -4pxpx;
+  right: -15px;
+  background-color: white;
+}
+
+#PlacesAutocomplete_autocomplete-container {
+  z-index: 9999 !important;
+}
+
+
+
+.search-form {
+  position: relative;
 }
 
 .search-btn:focus, .search-btn:hover {
@@ -29,10 +43,14 @@
   outline: none !important;
   border:none !important;
 }
+#PlacesAutocomplete__root {
+  width: 100%;
+}
 
 .search-bar {
   outline: none !important;
   border:none !important;
+  width: 100% !important;
 }
 
 .search-bar:focus {
