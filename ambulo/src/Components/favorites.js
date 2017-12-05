@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 
 export default class Favorites extends React.Component {
