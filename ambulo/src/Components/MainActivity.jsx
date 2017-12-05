@@ -1,13 +1,12 @@
 import React from "react";
 import constants from "./constants";
+import config from "./config";  // Holds our api keys
 import { Link } from "react-router-dom";
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-
 import After from "../after.svg";
 import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
-
 import unirest from "unirest";
 
 export default class MainActivity extends React.Component {
@@ -21,6 +20,7 @@ export default class MainActivity extends React.Component {
             lng: null,
             faddress: undefined,
             loading: false,
+            photos2DArr: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSelect = this.handleSelect.bind(this)        
@@ -72,60 +72,75 @@ export default class MainActivity extends React.Component {
           })
         })
 
-        // console.log(this.state.address);
-        var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-        var flickr_key = "dbbe88f35f1cd428fcb2302f4bf1927e";
-
-
         geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
-            // console.log(latLng.lat);
-            // console.log(latLng.lng);
-            unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
-            .headers({'X-Mashape-Key' : 'hsP83XHk7umshDDsGOjuYJhfAESEp1vqarjjsnh1m2hxpTGbhC'})
-            .end(function (response) {
-                var places = [];
-                // places.push("hello");
-                // console.log(places);
-                // console.log(places.length);
-                response.body.places.forEach(function(element) {
-                    // console.log(element.name + " " + element.city + " " + element.state + " " + element.lat + " " + element.lon);
-                    var object = {
-                        name: element.name,
-                        city: element.city,
-                        state: element.state,
-                        lat: element.lat,
-                        lon: element.lon
-                    };
-                    var tags = element.name.replace(/ /g, "+");
-                    fetch(flickr + "&api_key=" + flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
-                            + "&sort=relevance&format=json&nojsoncallback=1")
+            // Send a request to trailapi to get a list of trails at this specific location.
+            // Return a promise and on success, resolve with the response body (places arr)
+            return new Promise((resolve, reject) => {
+                unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
+                   .header('X-Mashape-Key', config.api_keys.trailapi_key,)
+                   .header("Accept", "text/json")
+                   .end((response) => {
+                        if (response) {
+                            resolve(response.body.places);
+                        } else {
+                            reject(response);
+                        }
+                   })
+                })
+        })
+        // Successfully got the array of places from the trails api request, set the state of the program to have
+        // all the trails.
+        .then((placesArr) => {
+            let photos2DArrTemp = [];
+            placesArr.forEach(function(place) {
+                let placeObj = {
+                    name: place.name,
+                    city: place.city,
+                    state: place.state,
+                    lat: place.lat,
+                    lon: place.lon
+                };
+
+                // Send a request to flickr for photos matching a trail.
+                let flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
+                let tags = placeObj.name.replace(/ /g, "+");
+                fetch(flickr + "&api_key=" + config.api_keys.flickr_key + "&tags=" + tags + "&lat=" + placeObj.lat + "&lon=" + placeObj.lon
+                    + "&sort=relevance&format=json&nojsoncallback=1")
                     .then(response => {
                         return response.json()
-                    })
-                    .then(data => {
-                        object.photos = data.photos.photo;
-                        // console.log(object);
-                        places.push(object);
+                    }).then((photosObj) =>{
+                        // Iterate through photosArr and append the photosURL;
+                        let photosURL = [];
+                        let photosArr = photosObj.photos.photo;
 
+                        photosArr.forEach((photo) => {
+                            // Generate a url using the parsed information for json.
+                            let photoID = photo.id;
+                            let farmID = photo.farm;
+                            let secretID = photo.secret;
+                            let serverID = photo.server;
+                            let url = `https://farm${farmID}.staticflickr.com/${serverID}/${photoID}_${secretID}.jpg`
+                            photosURL.push(url);
+                        });
+                        // Push the array to our array of results.
+                        photos2DArrTemp.push(photosURL);
                     })
-                    .catch(error => console.error('Error', error));
-                });
-                
-                places.sort(function (a, b) {
-                    return a.photos.length - b.photos.length
-                })
-                
-                console.log(places);
-                
-                // console.log(places[0]);
-            });
+                    .catch((err) => console.log(err));
+            })
+
+            // Now have an array of urls. Need to sort and remove empty arrays.
+            console.log(photos2DArrTemp);
+
+            // Change the state of 2D field.
+            this.setState({
+                photos2DArr: photos2DArrTemp
+            })
         })
         .catch(error => console.error('Error', error));
     }
         
-
     prev() {
         alert("prev");
     }
@@ -136,7 +151,6 @@ export default class MainActivity extends React.Component {
     
     render() {
         let style = {
-            border: "5px solid red",
             position: "absolute",
             margin: "auto",
             top: "0",
@@ -175,43 +189,49 @@ export default class MainActivity extends React.Component {
         
         return(
             <div>
+                <div className="p-4 d-flex justify-content-end">
+                    <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                    <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                </div>
                 {
-                    this.state.faddress == undefined && !this.state.loading ?
-                    <div className="content row d-flex justify-content-center" style={style}>
-                        <div className="header col-md-8 col-xl-6 col-10 align-self-center">
-                            <h1 className="mb-4 display-1">AMBULO</h1>
-                            <div className="search-box">
-                                <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                    <button className="btn search-btn"><i class="fa fa-search"></i></button>
-                                </form>
+                    this.state.faddress === undefined && !this.state.loading ?
+                    <div>
+                        <div className="content row d-flex justify-content-center" style={style}>
+                            <div className="header col-xl-7 col-11 align-self-center">
+                                <h1 className="mt-0 text-left green mb-0">Ambulo</h1>
+                                <p className="sub text-left mb-5">Discover trails and capture natural scenery.</p>
+                                <div className="search-box">
+                                    <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
+                                        <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                        <button className="btn search-btn"><i className="fa fa-search"></i></button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </div> 
+                        </div> 
+                    </div>
                     :
                     <div>
-                        <div className="d-flex justify-content-end">
-                            <button className="btn" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                            <button className="btn" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
-                        </div>
-                        <div className="align-self-center">
-                            <h1 className="display-1">AMBULO</h1>
-                            <div className="search-box">
-                                <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
-                                    <PlacesAutocomplete onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                    <button className="btn search-btn"><i class="fa fa-search"></i></button>
-                                </form>
+                        <div className="align-self-center mb-5">
+                            <h1 className="green mb-3">Ambulo</h1>
+                            <div className="row">
+                                <div className="m-auto col-sm-5 col-md-4 col-xl-2 col-11 search-box">
+                                    <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
+                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleSelect} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                        <button className="btn search-btn"><i className="fa fa-search"></i></button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         <div>
                         <Dialog modal={this.state.show}
                                 trailName={this.state.trailName}/>
                         <div className="d-flex flex-column">
-                            {this.state.faddress == "" ?
+                            {this.state.faddress === "" ?
                                 <h3>default(?)</h3>
                                 :
                                 <div>
-                                    <h2>{this.state.address}</h2>
+                                    <h2>{this.state.faddress}</h2>
                                         <Trail/>
                                 </div>
                             }

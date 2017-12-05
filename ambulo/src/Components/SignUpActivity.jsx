@@ -50,57 +50,73 @@ export default class SignUpActivity extends React.Component {
     }
 
     render() {
+        let style = {
+            position: "absolute",
+            margin: "auto",
+            top: "0",
+            right: "0",
+            bottom: "0",
+            left: "0"
+        }
+
         // Redirect if authenticated
         if (this.state.authenticated) {
             return <Redirect to={constants.routes.home}/>
         }
 
         return (
-            <div className="container">
-                <h1>Sign Up</h1>
-                <form onSubmit={evt => this.handleSubmit(evt)}>
-                    {/* Display Name */}
-                    <div className="form-group">
-                        <label htmlFor="displayName">Display Name</label>
-                        <input id="displayName" type="text" className="form-control" placeholder="enter a display name" 
-                        value={this.state.displayName}
-                        onInput={evt => this.setState({displayName: evt.target.value})}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input id="email" type="email" className="form-control" placeholder="enter your email" 
-                        value={this.state.email}
-                        onInput={evt => this.setState({email: evt.target.value})}
-                        />
-                    </div>
+            <div>
+                <div className="p-4 d-flex justify-content-end">
+                    <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                    <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                </div>
+             <div className="d-flex justify-content-center" style={style}>
+                    <div className="card align-self-center">
+                        <div className="card-block p-5">
+                            <h2>Sign Up</h2>
+                            <form onSubmit={evt => this.handleSubmit(evt)}>
+                                {/* Display Name */}
+                                <div className="form-group">
+                                    <input id="displayName" type="text" className="form-control" placeholder="enter a display name" 
+                                    value={this.state.displayName}
+                                    onInput={evt => this.setState({displayName: evt.target.value})}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <input id="email" type="email" className="form-control" placeholder="enter your email" 
+                                    value={this.state.email}
+                                    onInput={evt => this.setState({email: evt.target.value})}
+                                    />
+                                </div>
 
-                    {/* Enter intial password */}                    
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input id="password" type="password" className="form-control" placeholder="enter a password" 
-                        value={this.state.password}
-                        onInput={evt => this.setState({password: evt.target.value})}
-                        />
-                    </div>
+                                {/* Enter intial password */}                    
+                                <div className="form-group">
+                                    <input id="password" type="password" className="form-control" placeholder="enter a password" 
+                                    value={this.state.password}
+                                    onInput={evt => this.setState({password: evt.target.value})}
+                                    />
+                                </div>
 
-                    {/* Enter Password twice for match */}
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input id="passwordVerify" type="password" className="form-control" placeholder="enter password again" 
-                        value={this.state.passwordVerify}
-                        onInput={evt => this.setState({passwordVerify: evt.target.value})}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <button type="submit" className="btn btn-success">
-                            Sign Up!
-                        </button>
-                    </div>
-                </form>
+                                {/* Enter Password twice for match */}
+                                <div className="form-group">
+                                    <input id="passwordVerify" type="password" className="form-control" placeholder="enter password again" 
+                                    value={this.state.passwordVerify}
+                                    onInput={evt => this.setState({passwordVerify: evt.target.value})}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <button type="submit" className="w-100 btn btn-success">
+                                        Sign Up!
+                                    </button>
+                                </div>
+                            </form>
 
-                {/* Give the option to Sign into existing account. */}
-                <p>Already have an account? <Link to={constants.routes.logIn}>Sign in!</Link></p>
+                            {/* Give the option to Sign into existing account. */}
+                            <p>Already have an account? <Link to={constants.routes.logIn}>Sign in!</Link></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
