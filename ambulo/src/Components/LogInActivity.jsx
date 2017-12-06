@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Redirect} from "react-router-dom";
 import constants from "./constants";
-// import firebase from "firebase/app";
+import firebase from "firebase/app";
 
 export default class LogInActivity extends React.Component {
     constructor(props) {
@@ -9,7 +9,7 @@ export default class LogInActivity extends React.Component {
         this.state = {
             email: "",
             password: "",
-            // authenticated: firebase.auth().currentUser != null
+            authenticated: firebase.auth().currentUser != null
         }
     }
 
@@ -17,24 +17,24 @@ export default class LogInActivity extends React.Component {
         evt.preventDefault();
         alert("Signing in"); // Remove this later
         /**
-         * TODO: 
+         * TODO:
          * Add firebase to index.js,
          * then uncomment code here
          */
 
-        // if (!this.state.authenticated) {
-        //     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-        //         .then((user) => {
-        //             this.setState({
-        //                 authenticated: true,
-        //             });
-        //             this.props.history.push(constants.routes.main);
-    
-        //         })
-        //         .catch((err) => {
-        //             alert(err.message);
-        //         });
-        // }
+        if (!this.state.authenticated) {
+             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+                 .then((user) => {
+                     this.setState({
+                         authenticated: true,
+                     });
+                     this.props.history.push(constants.routes.main);
+
+                 })
+                 .catch((err) => {
+                     alert(err.message);
+                 });
+         }
     }
 
     render() {
@@ -63,11 +63,11 @@ export default class LogInActivity extends React.Component {
                 <div className="cont d-flex justify-content-center" style={style}>
                     <div className="card align-self-center">
                         <div className="card-block p-5">
-                            <h2 className="mt-0">Sign In</h2>    
+                            <h2 className="mt-0">Sign In</h2>
                             <form onSubmit={evt => this.handleSubmit(evt)}>
                                 {/* Email Input Field */}
                                 <div className="form-group">
-                                    <input id="email" type="email" className="form-control" placeholder="enter your email" 
+                                    <input id="email" type="email" className="form-control" placeholder="enter your email"
                                     value={this.state.email}
                                     onInput={evt => this.setState({email: evt.target.value})}
                                     />
@@ -75,7 +75,7 @@ export default class LogInActivity extends React.Component {
 
                                 {/* Password Input Field */}
                                 <div className="form-group">
-                                    <input id="password" type="password" className="form-control" placeholder="enter a password" 
+                                    <input id="password" type="password" className="form-control" placeholder="enter a password"
                                     value={this.state.password}
                                     onInput={evt => this.setState({password: evt.target.value})}
                                     />

@@ -3,6 +3,7 @@ export default {
         main: "/",
         logIn: "/login",
         signUp: "/signup",
-        user: "/user"
+        user: "/user",
+        about: "/about"
     }
 }

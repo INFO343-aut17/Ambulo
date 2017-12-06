@@ -81,21 +81,21 @@ export default class SignUpActivity extends React.Component {
                             <form onSubmit={evt => this.handleSubmit(evt)}>
                                 {/* Display Name */}
                                 <div className="form-group">
-                                    <input id="displayName" type="text" className="form-control" placeholder="enter a display name" 
+                                    <input id="displayName" type="text" className="form-control" placeholder="enter a display name"
                                     value={this.state.displayName}
                                     onInput={evt => this.setState({displayName: evt.target.value})}
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <input id="email" type="email" className="form-control" placeholder="enter your email" 
+                                    <input id="email" type="email" className="form-control" placeholder="enter your email"
                                     value={this.state.email}
                                     onInput={evt => this.setState({email: evt.target.value})}
                                     />
                                 </div>
 
-                                {/* Enter intial password */}                    
+                                {/* Enter intial password */}
                                 <div className="form-group">
-                                    <input id="password" type="password" className="form-control" placeholder="enter a password" 
+                                    <input id="password" type="password" className="form-control" placeholder="enter a password"
                                     value={this.state.password}
                                     onInput={evt => this.setState({password: evt.target.value})}
                                     />
@@ -103,7 +103,7 @@ export default class SignUpActivity extends React.Component {
 
                                 {/* Enter Password twice for match */}
                                 <div className="form-group">
-                                    <input id="passwordVerify" type="password" className="form-control" placeholder="enter password again" 
+                                    <input id="passwordVerify" type="password" className="form-control" placeholder="enter password again"
                                     value={this.state.passwordVerify}
                                     onInput={evt => this.setState({passwordVerify: evt.target.value})}
                                     />

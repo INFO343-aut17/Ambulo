@@ -14,7 +14,7 @@ export default class Favorites extends React.Component {
     }
 
 // TODO: need to define userRef in prev, using current authed user. add user node in
-// database during sign up, needs to have lat, long, and trailName
+// database during sign up, needs to have city, trailState, and trailName
 
     componentDidMount() {
         this.unlisten = this.props.userRef.on("value",
@@ -44,7 +44,7 @@ export default class Favorites extends React.Component {
          }
          let favs = [];
          this.state.msgSnapshot.forEach(snap => {
-             favs.push(<li style={{color: 'blue'}}key={snap.key}>{snap.val().trailName + ": " + snap.val().lat + snap.val().long}<br></br><button onClick={() => this.removeFav(snap.key)} className="btn btn-warning btn-sm">Delete</button></li>)
+             favs.push(<li style={{color: 'blue'}}key={snap.key}>{snap.val().trailName + ": " + snap.val().city + ", " +  snap.val().trailState}<br></br><button onClick={() => this.removeFav(snap.key)} className="btn btn-warning btn-sm">Delete</button></li>)
          })
         return(
           <div>

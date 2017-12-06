@@ -67,26 +67,26 @@ export default class Trail extends React.Component {
         }
 
         let images = []
-        if (this.state.photos.length != 0) {
+        if (this.state.photos.length !== 0) {
             for (var i = (this.state.page - 1) * 4; i < this.state.page * 4; i++) {
-                if (this.state.photos[i] != undefined) {
-                    images.push(<img className="col-2" src={this.state.photos[i]}/>)
+                if (this.state.photos[i] !== undefined) {
+                    images.push(<img alt="trail" className="col-2" src={this.state.photos[i]}/>)
                 }
             }
         }
-        
+
         return(
             <div>
                 <Dialog modal={this.state.show}
                     trailName={this.state.trailName} close={close}/>
                 <h3 className="btn" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
-                    {this.state.photos.length == 0 ? <div>Couldn't find any</div> : 
+                    {this.state.photos.length === 0 ? <div>Couldn't find any</div> :
                         // <div>
-                        // {this.state.page < (Math.ceil(this.props.photos.length / 4)) ? 
+                        // {this.state.page < (Math.ceil(this.props.photos.length / 4)) ?
                             <div className="row justify-content-center">
-                            <img className="col-2" style={style} src={Before} onClick={() => this.prev()}/>
+                            <img alt="second hike" className="col-2" style={style} src={Before} onClick={() => this.prev()}/>
                             {images}
-                            <img className="col-2" style={style} src={After} onClick={() => this.next()}/>
+                            <img alt="next hike" className="col-2" style={style} src={After} onClick={() => this.next()}/>
                             </div>
                         // :
                         //     <div>

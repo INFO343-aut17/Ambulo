@@ -21,7 +21,7 @@ export default class MainActivity extends React.Component {
             ref: []
         }
         this.handleChange = this.handleChange.bind(this)
-        this.handleSelect = this.handleSelect.bind(this)      
+        this.handleSelect = this.handleSelect.bind(this)
     }
 
     show(evt) {
@@ -40,7 +40,7 @@ export default class MainActivity extends React.Component {
     handleSelect(address) {
         console.log("selected")
         var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-        
+
 
         geocodeByAddress(address)
         .then((results) => getLatLng(results[0]))
@@ -99,7 +99,7 @@ export default class MainActivity extends React.Component {
                         promises.push(promise);
                     })
                 });
-                Promise.all(promises).then(                    
+                Promise.all(promises).then(
                     () => {
                         this.setState({
                             loading: true,
@@ -124,7 +124,7 @@ export default class MainActivity extends React.Component {
             )
             .catch(error => console.error('Error', error));
         }
-    
+
     render() {
         let style = {
             position: "absolute",
@@ -168,7 +168,7 @@ export default class MainActivity extends React.Component {
             overflow: "scroll",
             paddingBottom: "50px"
         }
-        
+
         return(
             <div>
                 <div className="p-4 d-flex justify-content-end">
@@ -177,7 +177,7 @@ export default class MainActivity extends React.Component {
                     <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
                 {
-                    this.state.faddress === undefined || this.state.error == "Enter Valid Address"  ?
+                    this.state.faddress === undefined || this.state.error === "Enter Valid Address"  ?
                     <div>
                         <div className="content row d-flex justify-content-center" style={style}>
                             <div className="header col-xl-7 col-11 align-self-center">
@@ -190,7 +190,7 @@ export default class MainActivity extends React.Component {
                                     </form>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                     :
                     <div>
@@ -209,7 +209,7 @@ export default class MainActivity extends React.Component {
                                 :
                                 <div style={overflow}>
                                     <h2>{this.state.faddress}</h2>
-                                        {!this.state.loading != 0 ? this.state.ref : <div>loading</div>}
+                                        {!this.state.loading !== 0 ? this.state.ref : <div>loading</div>}
                                 </div>
                             }
 

@@ -44,7 +44,7 @@ export default class Dialog extends React.Component {
         let end = {
             justifyContent: "flex-end"
         }
-        
+
         let display = {
             display: "initial"
         }
@@ -59,7 +59,7 @@ export default class Dialog extends React.Component {
 
         return(
             <div className="modal-container">
-                 <Modal 
+                 <Modal
                     show={this.state.show}
                     onHide={this.props.close}>
                     <ModalBody>
@@ -114,8 +114,8 @@ export default class Dialog extends React.Component {
                             </div>
                         </div>
                     }
-                    <button className="btn m-auto" style={transparent} 
-                                onClick={() => this.showMore()}><img src={more} style={adjust}/></button>
+                    <button className="btn m-auto" style={transparent}
+                                onClick={() => this.showMore()}><img alt="more" src={more} style={adjust}/></button>
                     </ModalBody>
                 </Modal>
             </div>
