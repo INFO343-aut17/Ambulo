@@ -74,17 +74,19 @@ export default class MainActivity extends React.Component {
                    .header('X-Mashape-Key', config.api_keys.trailapi_key,)
                    .header("Accept", "text/json")
                    .end(function (response) {
+                    console.log(response.body.places);
                     response.body.places.forEach(function(element) {
                         var object = {
                             name: element.name,
                             city: element.city,
                             state: element.state,
                             lat: element.lat,
-                            lon: element.lon
+                            lon: element.lon,
+                            activities: element.activities
                         };
                         var tags = element.name.replace(/ /g, "+");
                         var promise = fetch(flickr + "&api_key=" + config.api_keys.flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
-                                + "&sort=relevance&format=json&nojsoncallback=1")
+                                + "&sort=interestingness-desc&format=json&nojsoncallback=1")
                         .then(response => {
                           return response.json()
                         })
@@ -114,7 +116,7 @@ export default class MainActivity extends React.Component {
                             ref: []
                         })
                         places.forEach(function(element) {
-                            this.state.ref.push(<Trail name={element.name} photos={element.photos}/>)
+                            this.state.ref.push(<Trail info={element}/>)
                         }, this)
                         this.setState({
                             loading: false
@@ -209,7 +211,18 @@ export default class MainActivity extends React.Component {
                                 :
                                 <div style={overflow}>
                                     <h2>{this.state.faddress}</h2>
-                                        {!this.state.loading ? this.state.ref : <div>loading</div>}
+                                        {!this.state.loading ? 
+                                            <div>
+                                                {this.state.ref.length == 0 ?
+                                                    <div>no trails found</div>
+                                                    :
+                                                    this.state.ref 
+                                                }
+                                            </div>
+
+                                            : 
+                                            
+                                            <div>loading</div>}
                                 </div>
                             }
 

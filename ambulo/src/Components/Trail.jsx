@@ -8,7 +8,7 @@ export default class Trail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            trailName: this.props.name,
+            trailName: this.props.info.name,
             show: false,
             photos: [],
             ready: false,
@@ -17,7 +17,7 @@ export default class Trail extends React.Component {
     }
 
     componentDidMount() {
-        this.props.photos.forEach(element => {
+        this.props.info.photos.forEach(element => {
             this.state.photos.push("http://farm" + element.farm + ".static.flickr.com/" +
                         element.server + "/" + element.id + "_" + element.secret + ".jpg");
         });
@@ -43,7 +43,7 @@ export default class Trail extends React.Component {
     }
 
     next() {
-        if (this.state.page < Math.ceil(this.props.photos.length / 4)) {
+        if (this.state.page < Math.ceil(this.props.info.photos.length / 4)) {
             this.setState({
                 page: this.state.page + 1
             })
@@ -78,7 +78,7 @@ export default class Trail extends React.Component {
         return(
             <div>
                 <Dialog modal={this.state.show}
-                    trailName={this.state.trailName} close={close}/>
+                    data={this.props.info} close={close}/>
                 <h3 className="btn" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
                     {this.state.photos.length === 0 ? <div>Couldn't find any</div> :
                         // <div>

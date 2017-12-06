@@ -7,31 +7,19 @@ export default class Dialog extends React.Component {
         super(props);
         this.state = {
             show: this.props.modal,
-            trailName: this.props.trailName,
-            moreInfo: false
+            trailName: this.props.data.name
         }
     }
 
     componentWillReceiveProps(nextProps){
         if (this.state.show !== nextProps.modal){
             this.setState({
-                show: nextProps.modal,
-                trailName: nextProps.trailName
+                show: nextProps.modal
             });
         }
     }
 
-    showMore() {
-        this.setState({
-            moreInfo: !this.state.moreInfo
-        });
-    }
-
     render() {
-        // let close = () => this.setState({
-        //     show: false,
-        //     moreInfo: false
-        // });
 
         let transparent = {
             backgroundColor: "transparent"
@@ -57,6 +45,15 @@ export default class Dialog extends React.Component {
             textAlign: "right"
         }
 
+        let activities = [];
+        this.props.data.activities.forEach(element => {
+            activities.push(
+                <div>
+                    <h4>{element.activity_type.name}</h4>
+                    <p>{element.description}</p>
+                </div>
+            )
+        });
         return(
             <div className="modal-container">
                  <Modal
@@ -67,8 +64,6 @@ export default class Dialog extends React.Component {
                             <ModalTitle style={title} className="col">{this.state.trailName}</ModalTitle>
                             <p className="col-12" onClick={this.props.close} style={text}>close</p>
                         </div>
-                    {this.state.moreInfo ?
-
                         <div>
                             <div className="row">
                                     <div className="col">1</div>
@@ -79,43 +74,24 @@ export default class Dialog extends React.Component {
                                     <div className="col">6</div>
                                     <div className="col">7</div>
                             </div>
-                            <div className="row">
-                                    <div className="col">
-                                        <div>Address</div>
-                                        <div>Website</div>
-                                        <div>(?) Comments (?) Likes</div>
+                            <hr />
+                            <div>
+                                
+                                {activities.length != 0 ?
+                                    <div>
+                                        <h3>Activities</h3>
+                                        <div>{activities}</div>
+                                        
                                     </div>
-                                    <div className="col">
-                                        <div>Map</div>
-                                    </div>
+                                    :
+                                    <div></div>
+                                }
+                                <div>{"lat: " + this.props.data.lat + " lon: " + this.props.data.lon}</div>
                             </div>
+                            <hr />
+                            <div>Map</div>
+
                         </div>
-                        :
-                        <div className="row">
-                            <div className="col-2 d-flex align-self-center">
-                                <button className="btn">prev</button>
-                            </div>
-                            <div className="col">
-                                <div className="row">
-                                    <div className="col">1</div>
-                                    <div className="col">2</div>
-                                    <div className="col">3</div>
-                                    <div className="col">4</div>
-                                </div>
-                                <div className="row">
-                                    <div className="col">5</div>
-                                    <div className="col">6</div>
-                                    <div className="col">7</div>
-                                    <div className="col">8</div>
-                                </div>
-                            </div>
-                            <div className="col-2 d-flex align-self-center">
-                                <button className="btn">next</button>
-                            </div>
-                        </div>
-                    }
-                    <button className="btn m-auto" style={transparent}
-                                onClick={() => this.showMore()}><img alt="more" src={more} style={adjust}/></button>
                     </ModalBody>
                 </Modal>
             </div>
