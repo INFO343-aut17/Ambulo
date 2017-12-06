@@ -37,32 +37,8 @@ export default class MainActivity extends React.Component {
         })
     }
 
-    handleSubmit(evt) {
-        this.setState({
-            faddress: this.state.address,
-            show: false
-        });
-    }
-
-    handleEnter(address) {
-        geocodeByAddress(address)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => {
-            console.log('Success Yay', { lat, lng })
-            this.setState({
-                lat: lat,
-                lng: lng,
-                faddress: address,
-                loading: false,
-                error: ""
-            })
-        })
-        .catch((error) => {
-            console.log('Oh no!', error)
-        })
-    }
-
     handleSelect(address) {
+        console.log("selected")
         var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
         
 
@@ -89,7 +65,7 @@ export default class MainActivity extends React.Component {
 
         var places = [];
         var promises = [];
-        geocodeByAddress(this.state.address)
+        geocodeByAddress(address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
             // Send a request to trailapi to get a list of trails at this specific location.
@@ -128,7 +104,7 @@ export default class MainActivity extends React.Component {
                         this.setState({
                             loading: true,
                             faddress: address,
-                        })}, 1000
+                        })}, 2000
                     )
             })
             .then(
@@ -208,7 +184,7 @@ export default class MainActivity extends React.Component {
                                 <h1 className="mt-0 text-left green mb-0">Ambulo</h1>
                                 <p className="sub text-left mb-5">Discover trails and capture natural scenery.</p>
                                 <div className="search-box">
-                                    <form className="form-inline search-form" onSubmit={evt => this.handleSubmit(evt)}>
+                                    <form className="form-inline search-form">
                                         <PlacesAutocomplete options={options} onEnterKeyDown={this.handleEnter} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                         <button className="btn search-btn"><i class="fa fa-search"></i></button>
                                     </form>
