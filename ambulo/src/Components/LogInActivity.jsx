@@ -9,7 +9,7 @@ export default class LogInActivity extends React.Component {
         this.state = {
             email: "",
             password: "",
-            // authenticated: firebase.auth().currentUser != null
+            authenticated: firebase.auth().currentUser != null
         }
     }
 
@@ -22,19 +22,19 @@ export default class LogInActivity extends React.Component {
          * then uncomment code here
          */
 
-        // if (!this.state.authenticated) {
-        //     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-        //         .then((user) => {
-        //             this.setState({
-        //                 authenticated: true,
-        //             });
-        //             this.props.history.push(constants.routes.main);
+        if (!this.state.authenticated) {
+             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+                 .then((user) => {
+                     this.setState({
+                         authenticated: true,
+                     });
+                     this.props.history.push(constants.routes.main);
 
-        //         })
-        //         .catch((err) => {
-        //             alert(err.message);
-        //         });
-        // }
+                 })
+                 .catch((err) => {
+                     alert(err.message);
+                 });
+         }
     }
 
     render() {
