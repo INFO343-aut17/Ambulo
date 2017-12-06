@@ -72,9 +72,9 @@ export default class SignUpActivity extends React.Component {
                 <div className="p-4 d-flex justify-content-end">
                     <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
                     <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                    <button className="btn log selected" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
-             <div className="d-flex justify-content-center" style={style}>
+             <div className="cont d-flex justify-content-center" style={style}>
                     <div className="card align-self-center">
                         <div className="card-block p-5">
                             <h2>Sign Up</h2>
@@ -86,6 +86,7 @@ export default class SignUpActivity extends React.Component {
                                     onInput={evt => this.setState({displayName: evt.target.value})}
                                     />
                                 </div>
+                                <div className="form-group">
                                     <input id="email" type="email" className="form-control" placeholder="enter your email" 
                                     value={this.state.email}
                                     onInput={evt => this.setState({email: evt.target.value})}
