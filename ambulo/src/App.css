@@ -48,6 +48,7 @@ input {
   box-shadow:none !important;
   -webkit-box-shadow:none !important; 
   border:none !important;
+  background-color: white;
 }
 .search-btn:active {
   outline: none !important;
@@ -85,11 +86,17 @@ input {
   border: 1px solid white;
   border-radius: 0px;
   padding-top: 0px;
+  transition: all 0.5s ease;
 }
 
-.log:hover {
+.log:hover, .selected {
   border-bottom: 1px solid #8ccdb0;
 }
+
+.selected {
+  cursor: default;
+}
+
 
 .search-bar:focus {
   outline: none !important;
@@ -110,7 +117,7 @@ button, button:hover, button:focus, button:active {
   outline: none !important;
   box-shadow:none !important;
   -webkit-box-shadow:none !important; 
-  background-color: white;
+  background-color: transparent;
 }
 
 body {
