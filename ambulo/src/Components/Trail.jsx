@@ -70,7 +70,7 @@ export default class Trail extends React.Component {
         if (this.state.photos.length !== 0) {
             for (var i = (this.state.page - 1) * 4; i < this.state.page * 4; i++) {
                 if (this.state.photos[i] !== undefined) {
-                    images.push(<img alt="trail" className="col-2" src={this.state.photos[i]}/>)
+                    images.push(<div className="col-2"><img alt="trail" className="trailimg" src={this.state.photos[i]}/></div>)
                 }
             }
         }

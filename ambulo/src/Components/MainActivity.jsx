@@ -92,7 +92,9 @@ export default class MainActivity extends React.Component {
                         })
                         .then(data => {
                             object.photos = data.photos.photo;
-                            places.push(object);
+                            if(object.photos.length !== 0) {
+                                places.push(object);
+                            }
                             places.sort(function (a, b) {
                                 return b.photos.length - a.photos.length
                             })
