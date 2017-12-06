@@ -14,6 +14,15 @@ export default class About extends React.Component {
     render() {
         return(
           <div>
+            <h2>We are ambulo</h2>
+            <p>{"We created ambulo as a class project"}</p>
+            <div className="images">
+              <h4>Anton Zheng</h4>
+              <h4>Anton Zheng</h4>
+              <h4>Anton Zheng</h4>
+              <h4>Anton Zheng</h4>
+
+            </div>
           </div>
         );
     }
