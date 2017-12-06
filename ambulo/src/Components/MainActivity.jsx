@@ -185,7 +185,7 @@ export default class MainActivity extends React.Component {
                                 <p className="sub text-left mb-5">Discover trails and capture natural scenery.</p>
                                 <div className="search-box">
                                     <form className="form-inline search-form">
-                                        <PlacesAutocomplete options={options} onEnterKeyDown={this.handleEnter} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                        <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                         <button className="btn search-btn"><i class="fa fa-search"></i></button>
                                     </form>
                                 </div>
@@ -198,7 +198,7 @@ export default class MainActivity extends React.Component {
                             <h1 className="green mb-3">Ambulo</h1>
                             <div className="row">
                                 <div className="m-auto col-sm-5 col-md-4 col-xl-2 col-11 search-box">
-                                    <PlacesAutocomplete options={options} onEnterKeyDown={this.handleEnter} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                    <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                 </div>
                             </div>
                         </div>
@@ -209,7 +209,7 @@ export default class MainActivity extends React.Component {
                                 :
                                 <div style={overflow}>
                                     <h2>{this.state.faddress}</h2>
-                                        {!this.state.loading !== 0 ? this.state.ref : <div>loading</div>}
+                                        {!this.state.loading ? this.state.ref : <div>loading</div>}
                                 </div>
                             }
 
