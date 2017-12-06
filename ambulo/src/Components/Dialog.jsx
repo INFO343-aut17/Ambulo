@@ -28,10 +28,10 @@ export default class Dialog extends React.Component {
     }
 
     render() {
-        let close = () => this.setState({
-            show: false,
-            moreInfo: false
-        });
+        // let close = () => this.setState({
+        //     show: false,
+        //     moreInfo: false
+        // });
 
         let transparent = {
             backgroundColor: "transparent"
@@ -61,11 +61,11 @@ export default class Dialog extends React.Component {
             <div className="modal-container">
                  <Modal 
                     show={this.state.show}
-                    onHide={close}>
+                    onHide={this.props.close}>
                     <ModalBody>
                         <div className="row">
                             <ModalTitle style={title} className="col">{this.state.trailName}</ModalTitle>
-                            <p className="col-12" onClick={close} style={text}>close</p>
+                            <p className="col-12" onClick={this.props.close} style={text}>close</p>
                         </div>
                     {this.state.moreInfo ?
 

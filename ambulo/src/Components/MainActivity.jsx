@@ -14,14 +14,11 @@ export default class MainActivity extends React.Component {
         super(props);
         this.state = {
             show: false,
-            trailName: "dummy",
             address: '',
-            lat: null,
-            lng: null,
             faddress: undefined,
             error: '',
-            loading: false,
-            photos2DArr: []
+            loading: true,
+            ref: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSelect = this.handleSelect.bind(this)      
@@ -29,39 +26,22 @@ export default class MainActivity extends React.Component {
 
     show(evt) {
         this.setState({
-            show: true,
-            trailName: evt.target.innerHTML
+            show: true
         });
      }
 
      handleChange(address) {
         this.setState({
-          address: address
+          address: address,
+          show: false
         })
     }
 
     handleSubmit(evt) {
-        console.log(this.state.faddress)
-        console.log(this.state.error)
-        geocodeByAddress(this.state.faddress)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => {
-          console.log('Success Yay', { lat, lng })
-          this.setState({
-            lat: lat,
-            lng: lng,
+        this.setState({
             faddress: this.state.address,
-            loading: false,
-            error: ""
-          })
-        })
-        .catch((error) => {
-          console.log('Oh no!', error)
-          this.setState({
-            faddress: undefined,
-            error: "Enter Valid Address"
-          })
-        })
+            show: false
+        });
     }
 
     handleEnter(address) {
@@ -83,6 +63,9 @@ export default class MainActivity extends React.Component {
     }
 
     handleSelect(address) {
+        var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
+        
+
         geocodeByAddress(address)
         .then((results) => getLatLng(results[0]))
         .then(({ lat, lng }) => {
@@ -103,82 +86,68 @@ export default class MainActivity extends React.Component {
             error: "Enter Valid Address"
           })
         })
+
+        var places = [];
+        var promises = [];
         geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
             // Send a request to trailapi to get a list of trails at this specific location.
             // Return a promise and on success, resolve with the response body (places arr)
-            return new Promise((resolve, reject) => {
                 unirest.get("https://trailapi-trailapi.p.mashape.com/?lat=" + latLng.lat + "&lon=" + latLng.lng)
                    .header('X-Mashape-Key', config.api_keys.trailapi_key,)
                    .header("Accept", "text/json")
-                   .end((response) => {
-                        if (response) {
-                            resolve(response.body.places);
-                        } else {
-                            reject(response);
-                        }
-                   })
-                })
-        })
-        // Successfully got the array of places from the trails api request, set the state of the program to have
-        // all the trails.
-        .then((placesArr) => {
-            let photos2DArrTemp = [];
-            placesArr.forEach(function(place) {
-                let placeObj = {
-                    name: place.name,
-                    city: place.city,
-                    state: place.state,
-                    lat: place.lat,
-                    lon: place.lon
-                };
-
-                // Send a request to flickr for photos matching a trail.
-                let flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-                let tags = placeObj.name.replace(/ /g, "+");
-                fetch(flickr + "&api_key=" + config.api_keys.flickr_key + "&tags=" + tags + "&lat=" + placeObj.lat + "&lon=" + placeObj.lon
-                    + "&sort=relevance&format=json&nojsoncallback=1")
-                    .then(response => {
-                        return response.json()
-                    }).then((photosObj) =>{
-                        // Iterate through photosArr and append the photosURL;
-                        let photosURL = [];
-                        let photosArr = photosObj.photos.photo;
-
-                        photosArr.forEach((photo) => {
-                            // Generate a url using the parsed information for json.
-                            let photoID = photo.id;
-                            let farmID = photo.farm;
-                            let secretID = photo.secret;
-                            let serverID = photo.server;
-                            let url = `https://farm${farmID}.staticflickr.com/${serverID}/${photoID}_${secretID}.jpg`
-                            photosURL.push(url);
-                        });
-                        // Push the array to our array of results.
-                        photos2DArrTemp.push(photosURL);
+                   .end(function (response) {
+                    response.body.places.forEach(function(element) {
+                        var object = {
+                            name: element.name,
+                            city: element.city,
+                            state: element.state,
+                            lat: element.lat,
+                            lon: element.lon
+                        };
+                        var tags = element.name.replace(/ /g, "+");
+                        var promise = fetch(flickr + "&api_key=" + config.api_keys.flickr_key + "&tags=" + tags + "&lat=" + element.lat + "&lon=" + element.lon
+                                + "&sort=relevance&format=json&nojsoncallback=1")
+                        .then(response => {
+                          return response.json()
+                        })
+                        .then(data => {
+                            object.photos = data.photos.photo;
+                            places.push(object);
+                            places.sort(function (a, b) {
+                                return b.photos.length - a.photos.length
+                            })
+                        })
+                        .catch(error => console.error('Error', error));
+                        promises.push(promise);
                     })
-                    .catch((err) => console.log(err));
+                });
+                Promise.all(promises).then(                    
+                    () => {
+                        this.setState({
+                            loading: true,
+                            faddress: address,
+                        })}, 1000
+                    )
             })
-
-            // Now have an array of urls. Need to sort and remove empty arrays.
-            console.log(photos2DArrTemp);
-
-            // Change the state of 2D field.
-            this.setState({
-                photos2DArr: photos2DArrTemp
-            })
-        })
-        .catch(error => console.error('Error', error));
-    }
-        
-    prev() {
-        alert("prev");
-    }
-
-    next() {
-        alert("next");
-    }
+            .then(
+                setTimeout(
+                    () => {
+                        this.setState({
+                            ref: []
+                        })
+                        places.forEach(function(element) {
+                            this.state.ref.push(<Trail name={element.name} photos={element.photos}/>)
+                        }, this)
+                        this.setState({
+                            loading: false
+                        })
+                    }, 2000
+                )
+            )
+            .catch(error => console.error('Error', error));
+        }
     
     render() {
         let style = {
@@ -217,6 +186,12 @@ export default class MainActivity extends React.Component {
                 country: "us"
             }
         }
+
+        var overflow = {
+            height: "500px",
+            overflow: "scroll",
+            paddingBottom: "50px"
+        }
         
         return(
             <div>
@@ -252,15 +227,13 @@ export default class MainActivity extends React.Component {
                             </div>
                         </div>
                         <div>
-                        <Dialog modal={this.state.show}
-                                trailName={this.state.trailName}/>
                         <div className="d-flex flex-column">
                             {this.state.faddress === "" ?
                                 <h3>default(?)</h3>
                                 :
-                                <div>
+                                <div style={overflow}>
                                     <h2>{this.state.faddress}</h2>
-                                        <Trail/>
+                                        {!this.state.loading != 0 ? this.state.ref : <div>loading</div>}
                                 </div>
                             }
 

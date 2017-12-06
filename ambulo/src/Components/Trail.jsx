@@ -8,9 +8,23 @@ export default class Trail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            trailName: "Trail Name",
-            show: false
+            trailName: this.props.name,
+            show: false,
+            photos: [],
+            ready: false,
+            page: 1
         }
+    }
+
+    componentDidMount() {
+        this.props.photos.forEach(element => {
+            this.state.photos.push("http://farm" + element.farm + ".static.flickr.com/" +
+                        element.server + "/" + element.id + "_" + element.secret + ".jpg");
+        });
+
+        this.setState({
+            ready: true
+        })
     }
 
     show(evt) {
@@ -20,21 +34,67 @@ export default class Trail extends React.Component {
         });
     }
 
+    prev() {
+        if (this.state.page > 1) {
+            this.setState({
+                page: this.state.page - 1
+            })
+        }
+    }
+
+    next() {
+        if (this.state.page < Math.ceil(this.props.photos.length / 4)) {
+            this.setState({
+                page: this.state.page + 1
+            })
+        }
+    }
+
+
     render() {
+        let close = () => this.setState({
+            show: false,
+            moreInfo: false
+        });
+
+        let style = {
+            width: "70%",
+            maxWidth: "100px"
+        }
+
+        let center = {
+            justifyContent: "center"
+        }
+
+        let images = []
+        if (this.state.photos.length != 0) {
+            for (var i = (this.state.page - 1) * 4; i < this.state.page * 4; i++) {
+                if (this.state.photos[i] != undefined) {
+                    images.push(<img className="col-2" src={this.state.photos[i]}/>)
+                }
+            }
+        }
         
         return(
             <div>
                 <Dialog modal={this.state.show}
-                    trailName={this.state.trailName}/>
-                <h3 className="btn" onClick={evt => this.show(evt)}>Trail Name</h3>
-                <div className="row">
-                    <img className="col" src={Before} onClick={() => this.prev()}/>
-                    <div className="col">1</div>
-                    <div className="col">2</div>
-                    <div className="col">3</div>
-                    <div className="col">4</div>
-                    <img className="col" src={After} onClick={() => this.next()}/>
-                </div>
+                    trailName={this.state.trailName} close={close}/>
+                <h3 className="btn" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
+                    {this.state.photos.length == 0 ? <div>Couldn't find any</div> : 
+                        // <div>
+                        // {this.state.page < (Math.ceil(this.props.photos.length / 4)) ? 
+                            <div className="row justify-content-center">
+                            <img className="col-2" style={style} src={Before} onClick={() => this.prev()}/>
+                            {images}
+                            <img className="col-2" style={style} src={After} onClick={() => this.next()}/>
+                            </div>
+                        // :
+                        //     <div>
+                        //      {images}
+                        //      </div>
+                        // }
+                        // </div>
+                    }
             </div>
         );
     }
