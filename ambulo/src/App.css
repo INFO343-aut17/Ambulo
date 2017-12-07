@@ -149,3 +149,15 @@ h1 {
 p, div, button {
   font-family: 'lato'; 
 }
+
+#logo {
+  width: 50px;
+  padding-right: 10px;
+  position: relative;
+}
+
+@media only screen and (min-width: 768px){
+  #logo {
+    width: 100px;
+  }
+}

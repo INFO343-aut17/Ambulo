@@ -8,6 +8,7 @@ import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
 import unirest from "unirest";
+import ambuloLogo from "./ambu.png"
 
 import firebase from "firebase/app";
 
@@ -154,6 +155,7 @@ export default class MainActivity extends React.Component {
         let style = {
             position: "absolute",
             margin: "auto",
+            backgroundColor: "#fffcf3",
             top: "0",
             right: "0",
             bottom: "0",
@@ -197,7 +199,7 @@ export default class MainActivity extends React.Component {
         return(
             <div>
                 <div className="p-4 d-flex justify-content-end">
-                    <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                    <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><img src={ambuloLogo} id="logo" aria-hidden="true"></img></button>
 
                     {this.state.logged ? 
                         <div style={{zIndex: "9999"}}>
