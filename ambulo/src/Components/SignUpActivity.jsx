@@ -13,7 +13,7 @@ export default class SignUpActivity extends React.Component {
             password: "",
             passwordVerify: "",
             displayName: "",
-            authenticated: false
+            authenticated: firebase.auth().currentUser != null
         }
     }
 
@@ -64,7 +64,8 @@ export default class SignUpActivity extends React.Component {
 
         // Redirect if authenticated
         if (this.state.authenticated) {
-            return <Redirect to={constants.routes.home}/>
+            // return <Redirect to={constants.routes.home}/>
+            this.props.history.push("/")
         }
 
         return (
@@ -72,7 +73,6 @@ export default class SignUpActivity extends React.Component {
                 <div className="p-4 d-flex justify-content-end">
                     <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
                     <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                    <button className="btn log selected" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
              <div className="cont d-flex justify-content-center" style={style}>
                     <div className="card align-self-center">

@@ -4,6 +4,7 @@ export default {
         logIn: "/login",
         signUp: "/signup",
         user: "/user",
-        about: "/about"
+        about: "/about",
+        fav: "/favorites"
     }
 }

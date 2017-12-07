@@ -9,6 +9,7 @@ import LogInActivity from "./Components/LogInActivity";
 import SignUpActivity from "./Components/SignUpActivity";
 import UserActivity from "./Components/UserActivity";
 import About from "./Components/about";
+import Favorites from "./Components/favorites";
 
 
 class App extends Component {
@@ -22,6 +23,7 @@ class App extends Component {
             <Route path={constants.routes.signUp} component={SignUpActivity}/>
             <Route path={constants.routes.about} component={About}/>
             <Route path={constants.routes.user} component={UserActivity}/>
+            <Route path={constants.routes.fav} component={Favorites}/>
           </Switch>
         </Router>
       </div>

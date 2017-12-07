@@ -9,6 +9,8 @@ import Dialog from "./Dialog";
 import Trail from "./Trail";
 import unirest from "unirest";
 
+import firebase from "firebase/app";
+
 export default class MainActivity extends React.Component {
     constructor(props) {
         super(props);
@@ -18,10 +20,28 @@ export default class MainActivity extends React.Component {
             faddress: undefined,
             error: '',
             loading: true,
-            ref: []
+            ref: [],
+            logged: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSelect = this.handleSelect.bind(this)
+    }
+
+    componentDidMount() {
+        this.auth = firebase.auth().onAuthStateChanged(user => {
+            this.setState({
+                logged: user
+            }) 
+        })
+    }
+
+    componentWillUnmount() {
+        this.auth();
+    }
+
+    handleSignOut() {
+        firebase.auth().signOut()
+        .catch(err => alert(err.message));
     }
 
     show(evt) {
@@ -74,7 +94,7 @@ export default class MainActivity extends React.Component {
                    .header('X-Mashape-Key', config.api_keys.trailapi_key,)
                    .header("Accept", "text/json")
                    .end(function (response) {
-                    console.log(response.body.places);
+                    // console.log(response.body.places);
                     response.body.places.forEach(function(element) {
                         var object = {
                             name: element.name,
@@ -91,13 +111,14 @@ export default class MainActivity extends React.Component {
                           return response.json()
                         })
                         .then(data => {
+                            // console.log(data.photos.photo)
                             object.photos = data.photos.photo;
                             if(object.photos.length !== 0) {
                                 places.push(object);
+                                places.sort(function (a, b) {
+                                    return b.photos.length - a.photos.length
+                                })
                             }
-                            places.sort(function (a, b) {
-                                return b.photos.length - a.photos.length
-                            })
                         })
                         .catch(error => console.error('Error', error));
                         promises.push(promise);
@@ -177,8 +198,20 @@ export default class MainActivity extends React.Component {
             <div>
                 <div className="p-4 d-flex justify-content-end">
                     <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
-                    <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+
+                    {this.state.logged ? 
+                        <div style={{zIndex: "9999"}}>
+                            <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
+                            <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                            <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
+                        </div>
+                    :
+                        <div style={{zIndex: "9999"}}>
+                            <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                            <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                        </div>
+                    }
+                    
                 </div>
                 {
                     this.state.faddress === undefined || this.state.error === "Enter Valid Address"  ?

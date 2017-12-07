@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from 'react-bootstrap';
-import more from "../more.svg";
+import config from "./config";
 
 export default class Dialog extends React.Component {
     constructor(props) {
@@ -65,6 +65,17 @@ export default class Dialog extends React.Component {
                             <p className="col-12" onClick={this.props.close} style={text}>close</p>
                         </div>
                         <div>
+                            <div>
+                                <iframe
+                                    width="100%"
+                                    frameBorder="0" 
+                                    style={{border: "0"}}
+                                    src={"https://www.google.com/maps/embed/v1/place?key=" + config.api_keys.map_key
+                                        + "&q=" + this.props.data.lat + "," + this.props.data.lon} >
+                                    </iframe>
+                                <br />
+                            </div>
+                            <hr />
                             <div className="row">
                                     <div className="col">1</div>
                                     <div className="col">2</div>
@@ -76,7 +87,6 @@ export default class Dialog extends React.Component {
                             </div>
                             <hr />
                             <div>
-                                
                                 {activities.length != 0 ?
                                     <div>
                                         <h3>Activities</h3>
@@ -86,11 +96,7 @@ export default class Dialog extends React.Component {
                                     :
                                     <div></div>
                                 }
-                                <div>{"lat: " + this.props.data.lat + " lon: " + this.props.data.lon}</div>
                             </div>
-                            <hr />
-                            <div>Map</div>
-
                         </div>
                     </ModalBody>
                 </Modal>
