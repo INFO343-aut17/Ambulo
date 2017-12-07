@@ -197,7 +197,7 @@ export default class MainActivity extends React.Component {
         }
 
         return(
-            <div>
+            <div style={{background:"#fffcf3"}}>
                 <div className="p-4 d-flex justify-content-end">
                     <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><img src={ambuloLogo} id="logo" aria-hidden="true"></img></button>
 

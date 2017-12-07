@@ -2,6 +2,7 @@ import React from "react";
 import { Link, Redirect} from "react-router-dom";
 import constants from "./constants";
 import firebase from "firebase/app";
+import ambuloLogo from "./ambu.png"
 
 export default class LogInActivity extends React.Component {
     constructor(props) {
@@ -15,11 +16,6 @@ export default class LogInActivity extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
-        /**
-         * TODO:
-         * Add firebase to index.js,
-         * then uncomment code here
-         */
 
         if (!this.state.authenticated) {
              firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -39,6 +35,7 @@ export default class LogInActivity extends React.Component {
     render() {
 
         let style = {
+            background: "#fffcf3",
             position: "absolute",
             margin: "auto",
             top: "0",
@@ -55,7 +52,7 @@ export default class LogInActivity extends React.Component {
         return (
             <div>
                 <div className="p-4 d-flex justify-content-end">
-                <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><img src={ambuloLogo} id="logo" aria-hidden="true"></img></button>
                     <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
                 <div className="cont d-flex justify-content-center" style={style}>
@@ -79,7 +76,7 @@ export default class LogInActivity extends React.Component {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <button type="submit" className="w-100 btn btn-primary">
+                                    <button type="submit" className="w-100 btn" style={{background: "#8ccdb0"}}>
                                         Sign In
                                     </button>
                                 </div>
