@@ -79,7 +79,7 @@ export default class Trail extends React.Component {
             <div>
                 <Dialog modal={this.state.show}
                     data={this.props.info} close={close}/>
-                <h3 className="btn" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
+                <h3 className="btn trailname" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
                     {this.state.photos.length === 0 ? <div>Couldn't find any</div> :
                         // <div>
                         // {this.state.page < (Math.ceil(this.props.photos.length / 4)) ?

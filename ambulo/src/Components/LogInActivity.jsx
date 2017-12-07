@@ -56,7 +56,6 @@ export default class LogInActivity extends React.Component {
             <div>
                 <div className="p-4 d-flex justify-content-end">
                 <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
-                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                 </div>
                 <div className="cont d-flex justify-content-center" style={style}>
                     <div className="card align-self-center">

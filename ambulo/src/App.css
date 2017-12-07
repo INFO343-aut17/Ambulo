@@ -95,7 +95,7 @@ input {
 
 .log {
   z-index: 99;
-  border: 1px solid white;
+  border: 1px solid transparent;
   border-radius: 0px;
   padding-top: 0px;
   transition: all 0.5s ease;
@@ -148,4 +148,9 @@ h1 {
 
 p, div, button {
   font-family: 'lato'; 
+}
+
+.trailname {
+  font-size: 2em;
+  font-weight: 500;
 }
