@@ -33,7 +33,7 @@ export default class MainActivity extends React.Component {
         this.auth = firebase.auth().onAuthStateChanged(user => {
             this.setState({
                 logged: user
-            }) 
+            })
         })
     }
 
@@ -262,12 +262,12 @@ export default class MainActivity extends React.Component {
                                 :
                                 <div style={overflow}>
                                     <h2>{this.state.faddress}</h2>
-                                        {!this.state.loading ? 
+                                        {!this.state.loading ?
                                             <div>
                                                 {this.state.ref.length == 0 ?
                                                     <div>no trails found</div>
                                                     :
-                                                    this.state.ref 
+                                                    this.state.ref
                                                 }
                                             </div>
 
