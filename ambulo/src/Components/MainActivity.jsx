@@ -198,6 +198,7 @@ export default class MainActivity extends React.Component {
         }
 
         return(
+
                 <div>
                         {this.state.faddress !== undefined?
                          <div className="bb fixed-top navbar d-flex justify-content-end">
@@ -210,11 +211,14 @@ export default class MainActivity extends React.Component {
                             {this.state.logged ? 
                                 <div style={{zIndex: "9999"}}>
                                     <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
-                                    <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                                       <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+                                     <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
                                     <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
                                 </div>
                                 :
                                     <div style={{zIndex: "9999"}}>
+                                        <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+
                                         <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
                                         <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                                     </div>
