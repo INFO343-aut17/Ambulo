@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import firebase from 'firebase/app';
 import Favorites from "./favorites";
 import 'firebase/auth';

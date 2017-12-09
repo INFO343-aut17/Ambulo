@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from 'react-bootstrap';
+import { Modal, ModalTitle, ModalBody } from 'react-bootstrap';
 import config from "./config";
 
 export default class Dialog extends React.Component {
@@ -21,22 +21,6 @@ export default class Dialog extends React.Component {
 
     render() {
 
-        let transparent = {
-            backgroundColor: "transparent"
-        }
-
-        let adjust = {
-            width: "40%"
-        }
-
-        let end = {
-            justifyContent: "flex-end"
-        }
-
-        let display = {
-            display: "initial"
-        }
-
         let title = {
             position: "absolute"
         }
@@ -46,13 +30,15 @@ export default class Dialog extends React.Component {
         }
 
         let activities = [];
+        var i = 0;
         this.props.data.activities.forEach(element => {
             activities.push(
-                <div>
+                <div key={i}>
                     <h4>{element.activity_type.name}</h4>
                     <p>{element.description}</p>
                 </div>
             )
+            i++;
         });
         return(
             <div className="modal-container">
@@ -68,7 +54,7 @@ export default class Dialog extends React.Component {
                             <div>
                                 <iframe
                                     width="100%"
-                                    frameBorder="0" 
+                                    frameBorder="0"
                                     style={{border: "0"}}
                                     src={"https://www.google.com/maps/embed/v1/place?key=" + config.api_keys.map_key
                                         + "&q=" + this.props.data.lat + "," + this.props.data.lon} >
@@ -85,13 +71,15 @@ export default class Dialog extends React.Component {
                                     <div className="col">6</div>
                                     <div className="col">7</div>
                             </div>
+                            <button className="btn log">WHAT</button>
+
                             <hr />
                             <div>
                                 {activities.length != 0 ?
                                     <div>
                                         <h3>Activities</h3>
                                         <div>{activities}</div>
-                                        
+
                                     </div>
                                     :
                                     <div></div>

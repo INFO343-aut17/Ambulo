@@ -1,10 +1,7 @@
 import React from "react";
-import constants from "./constants";
 import config from "./config";  // Holds our api keys
-import { Link } from "react-router-dom";
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import After from "../after.svg";
-import Before from "../before.svg";
+
 import Dialog from "./Dialog";
 import Trail from "./Trail";
 import unirest from "unirest";
@@ -138,8 +135,10 @@ export default class MainActivity extends React.Component {
                         this.setState({
                             ref: []
                         })
+                        var i = 0;
                         places.forEach(function(element) {
-                            this.state.ref.push(<Trail info={element}/>)
+                            this.state.ref.push(<Trail key={i} info={element}/>);
+                            i++;
                         }, this)
                         this.setState({
                             loading: false
@@ -227,7 +226,7 @@ export default class MainActivity extends React.Component {
                                 <div className="search-box">
                                     <form className="form-inline search-form">
                                         <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                        <button className="btn search-btn"><i class="fa fa-search"></i></button>
+                                        <button className="btn search-btn"><i className="fa fa-search"></i></button>
                                     </form>
                                 </div>
                             </div>
