@@ -3,7 +3,6 @@ export default {
         main: "/",
         logIn: "/login",
         signUp: "/signup",
-        user: "/user",
         about: "/about",
         fav: "/favorites"
     }

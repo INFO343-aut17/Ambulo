@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import constants from "./constants";
 import firebase from "firebase/app";
 
@@ -15,11 +15,6 @@ export default class LogInActivity extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
-        /**
-         * TODO:
-         * Add firebase to index.js,
-         * then uncomment code here
-         */
 
         if (!this.state.authenticated) {
              firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -28,7 +23,6 @@ export default class LogInActivity extends React.Component {
                          authenticated: true,
                      });
                      this.props.history.push(constants.routes.main);
-
                  })
                  .catch((err) => {
                      alert(err.message);
@@ -37,7 +31,6 @@ export default class LogInActivity extends React.Component {
     }
 
     render() {
-
         let style = {
             position: "absolute",
             margin: "auto",
@@ -49,7 +42,7 @@ export default class LogInActivity extends React.Component {
 
         // Redirect to home if user is not logged in.
         if (this.state.authenticated) {
-            return <Redirect to={constants.routes.home}/>
+            this.props.history.push("/");
         }
 
         return (

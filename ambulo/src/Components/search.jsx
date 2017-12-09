@@ -1,7 +1,7 @@
 import React from "react";
 import constants from "./constants";
 import { Link } from "react-router-dom";
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 export default class Search extends React.Component {
     constructor(props) {
@@ -9,7 +9,7 @@ export default class Search extends React.Component {
         this.state = {
             address: ''
         }
-        this.onChange = (address) => this.setState({ address })
+        this.onChange = (address) => this.setState({ address });
     }
     
     render() {

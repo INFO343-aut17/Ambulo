@@ -57,14 +57,12 @@ export default class MainActivity extends React.Component {
     }
 
     handleSelect(address) {
-        console.log("selected")
         var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
 
 
         geocodeByAddress(address)
         .then((results) => getLatLng(results[0]))
         .then(({ lat, lng }) => {
-          console.log('Success Yay', { lat, lng })
           this.setState({
             lat: lat,
             lng: lng,
@@ -75,7 +73,6 @@ export default class MainActivity extends React.Component {
           })
         })
         .catch((error) => {
-          console.log('Oh no!', error)
           this.setState({
             faddress: undefined,
             error: "Enter Valid Address"
@@ -93,7 +90,6 @@ export default class MainActivity extends React.Component {
                    .header('X-Mashape-Key', config.api_keys.trailapi_key,)
                    .header("Accept", "text/json")
                    .end(function (response) {
-                    // console.log(response.body.places);
                     response.body.places.forEach(function(element) {
                         var object = {
                             name: element.name,
@@ -110,7 +106,6 @@ export default class MainActivity extends React.Component {
                           return response.json()
                         })
                         .then(data => {
-                            // console.log(data.photos.photo)
                             object.photos = data.photos.photo;
                             if(object.photos.length !== 0) {
                                 places.push(object);
@@ -129,7 +124,7 @@ export default class MainActivity extends React.Component {
                             loading: true,
                             faddress: address,
                         })}, 3000
-                    )
+                    );
             })
             .then(
                 setTimeout(
@@ -160,6 +155,7 @@ export default class MainActivity extends React.Component {
             bottom: "0",
             left: "0"
         }
+
         const AutocompleteItem = ({ formattedSuggestion }) => (
             <div className="Demo__suggestion-item">
               <i className='fa fa-map-marker Demo__suggestion-icon'/>
@@ -174,10 +170,12 @@ export default class MainActivity extends React.Component {
             autoFocus: true,
             placeholder: "Search Places",
         }
+        
         const myStyles = {
             input: { border: 'none' },
             autocompleteContainer: { zIndex: '9999' }
         }
+
         const cssClasses = {
             input: 'search-bar'
         }
@@ -197,31 +195,30 @@ export default class MainActivity extends React.Component {
         }
 
         return(
-
                 <div>
-                        {this.state.faddress !== undefined?
-                         <div className="bb fixed-top navbar d-flex justify-content-end">
-                            <div className="mr-auto">
-                                <button disabled className="float-left btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
-                                <div className="float-left search-box tr">
-                                    <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                </div>
+                    {this.state.faddress !== undefined?
+                        <div className="bb fixed-top navbar d-flex justify-content-end">
+                        <div className="mr-auto">
+                            <button disabled className="float-left btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                            <div className="float-left search-box tr">
+                                <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                             </div>
-                            {this.state.logged ?
+                        </div>
+                        {this.state.logged ?
+                            <div style={{zIndex: "9999"}}>
+                                <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
+                                    <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+                                    <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                                <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
+                            </div>
+                            :
                                 <div style={{zIndex: "9999"}}>
-                                    <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
-                                       <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
-                                     <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
-                                    <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
-                                </div>
-                                :
-                                    <div style={{zIndex: "9999"}}>
-                                        <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+                                    <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
 
-                                        <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                                        <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
-                                    </div>
-                            }
+                                    <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                                </div>
+                        }
                         </div>
                         :
                         <div className="fixed-top navbar d-flex justify-content-end">
