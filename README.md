@@ -12,7 +12,7 @@ AMBULO
 <br />
 
 ## DESCRIPTION
-A hiking web-based application that uses Trail API for locations and Instagram API for images of trails. Users will be able to view and filter trails on a map. When a user clicks on a trail marker, they can get instant information such as weather conditions. The Instagram images will help hikers decide which trails they might want to checkout in the future. 
+A hiking web-based application that uses Trail API for locations and Flickr API for images of trails. Users will be able to search by city and view local trails. When a user clicks on a trail name, they can get instant information such as location and information about activities provided by the Trail API. The flickr images will help hikers decide which trails they might want to checkout in the future. 
 
 ## POTENTIAL USER STORIES
 * As a user, I want to view trails on a map
@@ -24,7 +24,7 @@ A hiking web-based application that uses Trail API for locations and Instagram A
 
 ## APIS
 * [Trail API]( https://market.mashape.com/trailapi/trailapi)
-* [Instagram](https://www.instagram.com/developer/)
+* [Flickr](https://www.flickr.com/services/api/)
 * [Google Maps](https://developers.google.com/maps/)
 
 ## RELEVENT FRAMEWORKS / LIBRARIES
