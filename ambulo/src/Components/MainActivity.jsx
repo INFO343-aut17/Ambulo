@@ -8,6 +8,8 @@ import Before from "../before.svg";
 import Dialog from "./Dialog";
 import Trail from "./Trail";
 import unirest from "unirest";
+import ReactLoading from 'react-loading';
+
 
 import firebase from "firebase/app";
 
@@ -129,7 +131,7 @@ export default class MainActivity extends React.Component {
                         this.setState({
                             loading: true,
                             faddress: address,
-                        })}, 2000
+                        })}, 3000
                     )
             })
             .then(
@@ -144,7 +146,7 @@ export default class MainActivity extends React.Component {
                         this.setState({
                             loading: false
                         })
-                    }, 2000
+                    }, 3000
                 )
             )
             .catch(error => console.error('Error', error));
@@ -189,34 +191,56 @@ export default class MainActivity extends React.Component {
         }
 
         var overflow = {
-            height: "500px",
-            overflow: "scroll",
+            height: "100%",
+            position: "relative",
+            top: "84px",
             paddingBottom: "50px"
         }
 
         return(
-            <div>
-                <div className="p-4 d-flex justify-content-end">
-                    <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
 
-                    {this.state.logged ?
-                        <div style={{zIndex: "9999"}}>
-                            <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
-                            <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+                <div>
+                        {this.state.faddress !== undefined?
+                         <div className="bb fixed-top navbar d-flex justify-content-end">
+                            <div className="mr-auto">
+                                <button disabled className="float-left btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                                <div className="float-left search-box tr">
+                                    <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
+                                </div>
+                            </div>
+                            {this.state.logged ? 
+                                <div style={{zIndex: "9999"}}>
+                                    <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
+                                       <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+                                     <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                                    <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
+                                </div>
+                                :
+                                    <div style={{zIndex: "9999"}}>
+                                        <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
 
-                            <button className="btn log"  onClick={() => this.props.history.push("/favorites")}>favorites</button>
-                            <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
+                                        <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                                        <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                                    </div>
+                            }
                         </div>
-                    :
-                        <div style={{zIndex: "9999"}}>
-                            <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
-                            <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                            <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                        :
+                        <div className="fixed-top navbar d-flex justify-content-end">
+                        <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+                        {this.state.logged ? 
+                            <div style={{zIndex: "9999"}}>
+                                <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
+                                <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                                <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
+                            </div>
+                            :
+                                <div style={{zIndex: "9999"}}>
+                                    <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                                    <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                                </div>
+                        }
                         </div>
-                    }
-
-
-                </div>
+                        }
                 {
                     this.state.faddress === undefined || this.state.error === "Enter Valid Address"  ?
                     <div>
@@ -235,14 +259,6 @@ export default class MainActivity extends React.Component {
                     </div>
                     :
                     <div>
-                        <div className="align-self-center mb-5">
-                            <h1 className="green mb-3">Ambulo</h1>
-                            <div className="row">
-                                <div className="m-auto col-sm-5 col-md-4 col-xl-2 col-11 search-box">
-                                    <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
-                                </div>
-                            </div>
-                        </div>
                         <div>
                         <div className="d-flex flex-column">
                             {this.state.faddress === "" ?
@@ -259,9 +275,9 @@ export default class MainActivity extends React.Component {
                                                 }
                                             </div>
 
-                                            :
-
-                                            <div>loading</div>}
+                                            : 
+                                            
+                                            <ReactLoading className="m-auto" type="spin" color="#8ccdb0" />}
                                 </div>
                             }
 

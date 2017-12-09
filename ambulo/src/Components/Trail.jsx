@@ -12,6 +12,7 @@ export default class Trail extends React.Component {
             show: false,
             photos: [],
             ready: false,
+            photosPerPage: 4,
             page: 1
         }
     }
@@ -59,6 +60,11 @@ export default class Trail extends React.Component {
 
         let style = {
             width: "70%",
+            maxWidth: "100px",
+            cursor: "pointer"
+        }
+        let style2 = {
+            width: "70%",
             maxWidth: "100px"
         }
 
@@ -79,15 +85,31 @@ export default class Trail extends React.Component {
             <div>
                 <Dialog modal={this.state.show}
                     data={this.props.info} close={close}/>
-                <h3 className="btn trailname" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
+                <h3 className="cbutton trailname" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
                     {this.state.photos.length === 0 ? <div>Couldn't find any</div> :
                         // <div>
                         // {this.state.page < (Math.ceil(this.props.photos.length / 4)) ?
+                        <div>
+                            {this.state.photos.length < 5?
                             <div className="row justify-content-center">
-                            <img alt="second hike" className="col-2" style={style} src={Before} onClick={() => this.prev()}/>
                             {images}
-                            <img alt="next hike" className="col-2" style={style} src={After} onClick={() => this.next()}/>
                             </div>
+                            :
+                            <div className="row justify-content-center">
+                            {this.state.page > 1?
+                                <img alt="second hike" className="col-2" style={style} src={Before} onClick={() => this.prev()}/>
+                                :
+                                <div className="col-2" style={style2} />
+                            }
+                            {images}
+                            {this.state.page * 4 < this.state.photos.length?
+                            <img alt="next hike" className="col-2" style={style} src={After} onClick={() => this.next()}/>
+                            :
+                            <div className="col-2" style={style2} />
+                            }
+                            </div>
+                            }
+                        </div>
                         // :
                         //     <div>
                         //      {images}

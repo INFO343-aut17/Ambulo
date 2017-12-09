@@ -62,7 +62,7 @@ export default class Dialog extends React.Component {
                     <ModalBody>
                         <div className="row">
                             <ModalTitle style={title} className="col">{this.state.trailName}</ModalTitle>
-                            <p className="col-12" onClick={this.props.close} style={text}>close</p>
+                            <p className="col-12 cbutton" onClick={this.props.close} style={text}><i class="fa fa-times" aria-hidden="true"></i></p>
                         </div>
                         <div>
                             <div>
