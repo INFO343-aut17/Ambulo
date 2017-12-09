@@ -22,11 +22,14 @@ export default class Dialog extends React.Component {
             });
         }
     }
+
     componentDidMount() {
       this.auth = firebase.auth().onAuthStateChanged(user => {
-          this.setState({
-              uid: firebase.auth().currentUser.uid,
-          })
+          if (user) {
+            this.setState({
+                uid: firebase.auth().currentUser.uid,
+            })
+          }
       })
     }
 
@@ -34,17 +37,17 @@ export default class Dialog extends React.Component {
       this.auth();
 
     }
+
     addToFav(){
-      console.log(this.state.trailName +  "  " + this.props.data.lat + "," + this.props.data.lon)
       let userRef = firebase.database().ref("users/" + this.state.uid + "/favs");
-      console.log(this.state.uid);
       let favItem = {
         name: this.state.trailName,
         lat: this.props.data.lat,
         long: this.props.data.lon
       }
+
       userRef.push(favItem)
-        .then(console.log("added"));
+        .then(alert("added"));
     }
 
     render() {
@@ -76,9 +79,11 @@ export default class Dialog extends React.Component {
                     <ModalBody>
                         <div className="row">
                             <ModalTitle style={title} className="col">{this.state.trailName}</ModalTitle>
-                            <p className="col-12 cbutton" onClick={this.props.close} style={text}><i class="fa fa-times" aria-hidden="true"></i></p>
+                            <p className="col-12 cbutton" onClick={this.props.close} style={text}><i className="fa fa-times" aria-hidden="true"></i></p>
                         </div>
-                        <button className="btn-success" onClick={() => this.addToFav()}>Save to Favorites</button>
+                        {this.state.uid != undefined ? <button className="btn-success" onClick={() => this.addToFav()}>Save to Favorites</button> :
+                            <div></div>}
+                        
                         <div>
                             <div>
                                 <iframe
@@ -88,17 +93,13 @@ export default class Dialog extends React.Component {
                                     src={"https://www.google.com/maps/embed/v1/place?key=" + config.api_keys.map_key
                                         + "&q=" + this.props.data.lat + "," + this.props.data.lon} >
                                     </iframe>
-                                <br />
                             </div>
-                            <hr />
-
                             <hr />
                             <div>
                                 {activities.length != 0 ?
                                     <div>
                                         <h3>Activities</h3>
                                         <div>{activities}</div>
-
                                     </div>
                                     :
                                     <div></div>

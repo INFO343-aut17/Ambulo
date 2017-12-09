@@ -16,20 +16,16 @@ export default class FavDisplay extends React.Component {
         }
     }
 
-// TODO: need to define userRef in prev, using current authed user. add user node in
-// database during sign up, needs to have city, trailState, and trailName
-
     componentDidMount() {
-
       this.auth = firebase.auth().onAuthStateChanged(user => {
-          this.setState({
+        if (user) {
+            this.setState({
               uid: firebase.auth().currentUser.uid,
           })
-          console.log("HERE" + firebase.auth().currentUser.uid);
+        }
 
       })
-      this.unlisten = firebase.database().ref("users/" + this.state.uid + "/favs").on("value",
-        snapshot => this.setState({favSnapshot: snapshot}));
+        this.props.userRef.on("value", snapshot => this.setState({favSnapshot: snapshot.child(this.props.uid).child("favs")}))
     }
 
     componentWillUnmount() {
@@ -51,16 +47,13 @@ export default class FavDisplay extends React.Component {
            return <h3>{"Oops, you don't have any favorites saved!"}</h3>;
       } else {
         let favs = [];
-        var i = 0;
         this.state.favSnapshot.forEach(snap => {
-             favs.push(<li>snap.val().name + " " + snap.val().lat + ", " + snap.val().long</li>);
-             i++;
+             favs.push(<p>{snap.val().name}</p>);
         })
        return(
          <div>
            <h3>Here are all your favorites, {firebase.auth().currentUser.displayName}!</h3>
-           <ul>{favs}</ul>
-           {i}
+           {favs}
          </div>
        );
       }

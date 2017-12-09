@@ -17,16 +17,16 @@ export default class Favorites extends React.Component {
         }
     }
 
-// TODO: need to define userRef in prev, using current authed user. add user node in
-// database during sign up, needs to have city, trailState, and trailName
-
     componentDidMount() {
       this.auth = firebase.auth().onAuthStateChanged(user => {
-          this.setState({
-              uid: firebase.auth().currentUser.uid,
-          });
-          console.log(firebase.auth().currentUser.uid);
-
+          if (!user) {
+              this.props.history.push("/");
+          } else {
+            this.setState({
+                uid: firebase.auth().currentUser.uid,
+            });
+            console.log(firebase.auth().currentUser.uid);
+          }
       })
     }
 
@@ -37,20 +37,15 @@ export default class Favorites extends React.Component {
     handleSignOut() {
         firebase.auth().signOut()
         .catch(err => alert(err.message));
+        this.history.push("/");
     }
 
-/*
-  from firesebase.database().ref(<user>), find snapshots and display them, see the
-  msgList component from chat,
-*/
-
     render() {
-      let userRef2= firebase.database().ref("users/");
-      console.log("wtf "  + this.state.uid)
+      let userRef2= firebase.database().ref("users/" + this.state.uid);
         return(
           <div>
           <div className="p-4 d-flex justify-content-end">
-              <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+              <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
 
               {this.state.logged ?
                   <div style={{zIndex: "9999"}}>
@@ -63,8 +58,7 @@ export default class Favorites extends React.Component {
               :
                   <div style={{zIndex: "9999"}}>
                       <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
-                      <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
-                      <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                      <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
                   </div>
               }
 

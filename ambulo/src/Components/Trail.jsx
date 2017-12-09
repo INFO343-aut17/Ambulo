@@ -72,7 +72,7 @@ export default class Trail extends React.Component {
             justifyContent: "center"
         }
 
-        let images = []
+        let images = [];
         if (this.state.photos.length !== 0) {
             for (var i = (this.state.page - 1) * 4; i < this.state.page * 4; i++) {
                 if (this.state.photos[i] !== undefined) {
@@ -87,8 +87,6 @@ export default class Trail extends React.Component {
                     data={this.props.info} close={close}/>
                 <h3 className="cbutton trailname" onClick={evt => this.show(evt)}>{this.state.trailName}</h3>
                     {this.state.photos.length === 0 ? <div>Couldn't find any</div> :
-                        // <div>
-                        // {this.state.page < (Math.ceil(this.props.photos.length / 4)) ?
                         <div>
                             {this.state.photos.length < 5?
                             <div className="row justify-content-center">
@@ -110,12 +108,6 @@ export default class Trail extends React.Component {
                             </div>
                             }
                         </div>
-                        // :
-                        //     <div>
-                        //      {images}
-                        //      </div>
-                        // }
-                        // </div>
                     }
             </div>
         );
