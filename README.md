@@ -16,9 +16,9 @@ A hiking web-based application that uses Trail API for locations and Instagram A
 
 ## POTENTIAL USER STORIES
 * As a user, I want to view trails on a map
-* As a photographer, I want to view vantage points on a map
-* As a user, I want to learn more about a trail (weather conditions, traveling to?, estimated time on trail)
-* As a pet owner, I want to know which trails are pet friendly
+* As a user, I should be able to find details about a specific trail
+* As a user, I should be able to save a trail to my favorites
+* As a user, I want to be able to search for trails based on a location
 * As a user, I want to view popular images of a certain trail
 
 
@@ -26,7 +26,6 @@ A hiking web-based application that uses Trail API for locations and Instagram A
 * [Trail API]( https://market.mashape.com/trailapi/trailapi)
 * [Instagram](https://www.instagram.com/developer/)
 * [Google Maps](https://developers.google.com/maps/)
-* [Weather](https://openweathermap.org/api)
 
 ## RELEVENT FRAMEWORKS / LIBRARIES
 * Bootstrap
