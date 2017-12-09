@@ -53,14 +53,13 @@ export default class FavDisplay extends React.Component {
         let favs = [];
         var i = 0;
         this.state.favSnapshot.forEach(snap => {
-             favs.push(snap.val().name);
-             // console.log("SNAPS" + snap);
+             favs.push(<li>snap.val().name + " " + snap.val().lat + ", " + snap.val().long</li>);
              i++;
         })
        return(
          <div>
            <h3>Here are all your favorites, {firebase.auth().currentUser.displayName}!</h3>
-           {favs[0]}
+           <ul>{favs}</ul>
            {i}
          </div>
        );
