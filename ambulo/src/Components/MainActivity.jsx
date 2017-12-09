@@ -207,7 +207,7 @@ export default class MainActivity extends React.Component {
                                     <PlacesAutocomplete options={options} autocompleteItem={AutocompleteItem} onSelect={this.handleSelect} classNames={cssClasses} googleLogo={false} styles={myStyles} inputProps={inputProps} />
                                 </div>
                             </div>
-                            {this.state.logged ? 
+                            {this.state.logged ?
                                 <div style={{zIndex: "9999"}}>
                                     <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
                                        <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
@@ -226,7 +226,7 @@ export default class MainActivity extends React.Component {
                         :
                         <div className="fixed-top navbar d-flex justify-content-end">
                         <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
-                        {this.state.logged ? 
+                        {this.state.logged ?
                             <div style={{zIndex: "9999"}}>
                                 <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
                                 <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
@@ -274,8 +274,8 @@ export default class MainActivity extends React.Component {
                                                 }
                                             </div>
 
-                                            : 
-                                            
+                                            :
+
                                             <ReactLoading className="m-auto" type="spin" color="#8ccdb0" />}
                                 </div>
                             }

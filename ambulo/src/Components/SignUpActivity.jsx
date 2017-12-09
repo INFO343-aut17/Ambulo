@@ -39,7 +39,9 @@ export default class SignUpActivity extends React.Component {
                         this.props.history.push(constants.routes.home);
                     }).then(() => {
                       // add user to database for future Favorites
-                      firebase.database().ref("users").push(user.uid);
+                      firebase.database().ref("users").child(user.uid).set({
+                      });
+
                     })
                     .catch((err) => {
                         alert(err.message);

@@ -1,13 +1,17 @@
 import React from "react";
 import { Modal, ModalTitle, ModalBody } from 'react-bootstrap';
 import config from "./config";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 
 export default class Dialog extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             show: this.props.modal,
-            trailName: this.props.data.name
+            trailName: this.props.data.name,
+            uid: undefined
         }
     }
 
@@ -17,6 +21,30 @@ export default class Dialog extends React.Component {
                 show: nextProps.modal
             });
         }
+    }
+    componentDidMount() {
+      this.auth = firebase.auth().onAuthStateChanged(user => {
+          this.setState({
+              uid: firebase.auth().currentUser.uid,
+          })
+      })
+    }
+
+    componentWillUnmount() {
+      this.auth();
+
+    }
+    addToFav(){
+      console.log(this.state.trailName +  "  " + this.props.data.lat + "," + this.props.data.lon)
+      let userRef = firebase.database().ref("users/" + this.state.uid + "/favs");
+      console.log(this.state.uid);
+      let favItem = {
+        name: this.state.trailName,
+        lat: this.props.data.lat,
+        long: this.props.data.lon
+      }
+      userRef.push(favItem)
+        .then(console.log("added"));
     }
 
     render() {
@@ -50,6 +78,7 @@ export default class Dialog extends React.Component {
                             <ModalTitle style={title} className="col">{this.state.trailName}</ModalTitle>
                             <p className="col-12 cbutton" onClick={this.props.close} style={text}><i class="fa fa-times" aria-hidden="true"></i></p>
                         </div>
+                        <button className="btn-success" onClick={() => this.addToFav()}>Save to Favorites</button>
                         <div>
                             <div>
                                 <iframe
@@ -62,16 +91,6 @@ export default class Dialog extends React.Component {
                                 <br />
                             </div>
                             <hr />
-                            <div className="row">
-                                    <div className="col">1</div>
-                                    <div className="col">2</div>
-                                    <div className="col">3</div>
-                                    <div className="col">4</div>
-                                    <div className="col">5</div>
-                                    <div className="col">6</div>
-                                    <div className="col">7</div>
-                            </div>
-                            <button className="btn log">WHAT</button>
 
                             <hr />
                             <div>

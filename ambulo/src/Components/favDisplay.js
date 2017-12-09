@@ -1,6 +1,8 @@
 import React from "react";
 import firebase from 'firebase/app';
 import Favorites from "./favorites";
+import { Link, Redirect } from 'react-router-dom';
+import config from "./config";
 import 'firebase/auth';
 import 'firebase/database';
 
@@ -8,7 +10,7 @@ export default class FavDisplay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          uid: "",
+          uid: this.props.uid,
           auth: undefined,
           favSnapshot: undefined
         }
@@ -22,19 +24,17 @@ export default class FavDisplay extends React.Component {
       this.auth = firebase.auth().onAuthStateChanged(user => {
           this.setState({
               uid: firebase.auth().currentUser.uid,
-              userRef: this.state.uid
           })
-          console.log(firebase.auth().currentUser.uid);
+          console.log("HERE" + firebase.auth().currentUser.uid);
 
       })
-      this.unlisten = this.props.userRef.on("value",
+      this.unlisten = firebase.database().ref("users/" + this.state.uid + "/favs").on("value",
         snapshot => this.setState({favSnapshot: snapshot}));
     }
 
     componentWillUnmount() {
-      this.props.userRef.off("value", this.unlisten);
       this.auth();
-
+      firebase.database().ref("users/" + this.state.uid + "/favs").off("value", this.unlisten);
     }
 
     removeFav(refKey) {
@@ -45,24 +45,26 @@ export default class FavDisplay extends React.Component {
         console.log("Remove succeeded.")
       })
     }
-/*
-  from firesebase.database().ref(<user>), find snapshots and display them, see the
-  msgList component from chat,
-*/
 
     render() {
-      if (this.state.msgSnapshot === undefined) {
+      if (this.state.favSnapshot === undefined) {
            return <h3>{"Oops, you don't have any favorites saved!"}</h3>;
-         }
-         let favs = [];
-         this.state.msgSnapshot.forEach(snap => {
-             favs.push(<li style={{color: 'blue'}}key={snap.key}>{snap.val().trailName + ": " + snap.val().city + ", " +  snap.val().trailState}<br></br><button onClick={() => this.removeFav(snap.key)} className="btn btn-warning btn-sm">Delete</button></li>)
-         })
-        return(
-          <div>
-            <h3>Here are all your favorite, {this.state.username}!</h3>
-            <ul></ul>
-          </div>
-        );
+      } else {
+        let favs = [];
+        var i = 0;
+        this.state.favSnapshot.forEach(snap => {
+             favs.push(snap.val().name);
+             // console.log("SNAPS" + snap);
+             i++;
+        })
+       return(
+         <div>
+           <h3>Here are all your favorites, {firebase.auth().currentUser.displayName}!</h3>
+           {favs[0]}
+           {i}
+         </div>
+       );
+      }
+
     }
 }
