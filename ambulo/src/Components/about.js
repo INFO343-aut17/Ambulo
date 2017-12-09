@@ -15,10 +15,17 @@ export default class About extends React.Component {
           width: "40%",
           maxWidth: "150px"
       }
+      let m = "Ambulo is a web app designed to allow users to explore hikes" +
+              " around an area by finding photos taken by others and uplodaed " +
+              "onto Flickr. Our team uses the Google Places API to determine a " +
+              "location, and then queries the Trails API to find hiking trails " +
+              "in the area. Then we call on the Flickr API to get photos uploaded " +
+              "with metadata location within a certain radius of that area."
         return(
           <div>
             <h2>We are ambulo</h2>
             <p>{"We created ambulo as a class project"}</p>
+            <p>{m}</p>
             <div className="images">
               <h4>Anton Zheng</h4>
               <img style={style} alt="anton" src="http://images.parenting.mdpcdn.com/sites/parenting.com/files/styles/facebook_og_image/public/separation_anxiety.jpg?itok=wIr8FGl-"/>
