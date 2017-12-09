@@ -31,7 +31,7 @@ export default class MainActivity extends React.Component {
         this.auth = firebase.auth().onAuthStateChanged(user => {
             this.setState({
                 logged: user
-            }) 
+            })
         })
     }
 
@@ -199,19 +199,23 @@ export default class MainActivity extends React.Component {
                 <div className="p-4 d-flex justify-content-end">
                     <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
 
-                    {this.state.logged ? 
+                    {this.state.logged ?
                         <div style={{zIndex: "9999"}}>
                             <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
+                            <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+
                             <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
                             <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
                         </div>
                     :
                         <div style={{zIndex: "9999"}}>
+                            <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
                             <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
                             <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
                         </div>
                     }
-                    
+
+
                 </div>
                 {
                     this.state.faddress === undefined || this.state.error === "Enter Valid Address"  ?
@@ -246,17 +250,17 @@ export default class MainActivity extends React.Component {
                                 :
                                 <div style={overflow}>
                                     <h2>{this.state.faddress}</h2>
-                                        {!this.state.loading ? 
+                                        {!this.state.loading ?
                                             <div>
                                                 {this.state.ref.length == 0 ?
                                                     <div>no trails found</div>
                                                     :
-                                                    this.state.ref 
+                                                    this.state.ref
                                                 }
                                             </div>
 
-                                            : 
-                                            
+                                            :
+
                                             <div>loading</div>}
                                 </div>
                             }
