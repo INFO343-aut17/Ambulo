@@ -204,7 +204,7 @@ export default class MainActivity extends React.Component {
                             <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
                             <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
 
-                            <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                            <button className="btn log"  onClick={() => this.props.history.push("/favorites")}>favorites</button>
                             <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
                         </div>
                     :

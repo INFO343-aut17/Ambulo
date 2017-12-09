@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import firebase from 'firebase/app';
+import FavDisplay from "./favDisplay";
 import 'firebase/auth';
 import 'firebase/database';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
@@ -9,7 +10,10 @@ export default class Favorites extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          username: "",
+          userRef: "",
+          uid: "",
+          auth: undefined,
+          favSnapshot: undefined
         }
     }
 
@@ -17,39 +21,57 @@ export default class Favorites extends React.Component {
 // database during sign up, needs to have city, trailState, and trailName
 
     componentDidMount() {
-        this.unlisten = this.props.userRef.on("value",
-          snapshot => this.setState({favSnapshot: snapshot}));
-      }
 
-    componentWillUnmount() {
-      this.props.userRef.off("value", this.unlisten);
-    }
+      this.auth = firebase.auth().onAuthStateChanged(user => {
+          this.setState({
+              uid: firebase.auth().currentUser.uid,
+              userRef: firebase.auth().currentUser.uid
+          })
+          console.log(firebase.auth().currentUser.uid);
 
-    removeFav(refKey) {
-      // remove from favorites list
-      var curr = firebase.database().ref(this.props.userRef/refKey);
-      curr.remove()
-        .then(function() {
-        console.log("Remove succeeded.")
       })
     }
+
+    componentWillUnmount() {
+      this.auth();
+
+    }
+    handleSignOut() {
+        firebase.auth().signOut()
+        .catch(err => alert(err.message));
+    }
+
 /*
   from firesebase.database().ref(<user>), find snapshots and display them, see the
   msgList component from chat,
 */
 
     render() {
-      if (this.state.msgSnapshot === undefined) {
-           return <div>loading...</div>;
-         }
-         let favs = [];
-         this.state.msgSnapshot.forEach(snap => {
-             favs.push(<li style={{color: 'blue'}}key={snap.key}>{snap.val().trailName + ": " + snap.val().city + ", " +  snap.val().trailState}<br></br><button onClick={() => this.removeFav(snap.key)} className="btn btn-warning btn-sm">Delete</button></li>)
-         })
+      let userRef = firebase.database().ref("users/" + this.state.uid);
+
         return(
           <div>
-            <h3>Here are all your favorite, {this.state.username}!</h3>
-            <ul></ul>
+          <div className="p-4 d-flex justify-content-end">
+              <button disabled className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
+
+              {this.state.logged ?
+                  <div style={{zIndex: "9999"}}>
+                      <div style={{display: "inline"}}>trail on, {firebase.auth().currentUser.displayName}</div>
+                      <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+
+                      <button className="btn log" onClick={() => this.props.history.push("/favorites")}>favorites</button>
+                      <button className="btn log" onClick={() => this.handleSignOut()}>log out</button>
+                  </div>
+              :
+                  <div style={{zIndex: "9999"}}>
+                      <button className="btn log" onClick={() => {this.props.history.push("/about")}}>about</button>
+                      <button className="btn log" onClick={() => {this.props.history.push("/login")}}>log in</button>
+                      <button className="btn log" onClick={() => {this.props.history.push("/signup")}}>sign up</button>
+                  </div>
+              }
+
+          </div>
+            <FavDisplay userRef={userRef}/>
           </div>
         );
     }
