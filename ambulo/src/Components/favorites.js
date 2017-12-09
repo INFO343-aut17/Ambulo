@@ -21,12 +21,10 @@ export default class Favorites extends React.Component {
 // database during sign up, needs to have city, trailState, and trailName
 
     componentDidMount() {
-
       this.auth = firebase.auth().onAuthStateChanged(user => {
           this.setState({
               uid: firebase.auth().currentUser.uid,
-              userRef: firebase.auth().currentUser.uid
-          })
+          });
           console.log(firebase.auth().currentUser.uid);
 
       })
@@ -47,8 +45,8 @@ export default class Favorites extends React.Component {
 */
 
     render() {
-      let userRef = firebase.database().ref("users/" + this.state.uid);
-
+      let userRef2= firebase.database().ref("users/");
+      console.log("wtf "  + this.state.uid)
         return(
           <div>
           <div className="p-4 d-flex justify-content-end">
@@ -71,7 +69,7 @@ export default class Favorites extends React.Component {
               }
 
           </div>
-            <FavDisplay userRef={userRef}/>
+            <FavDisplay uid={this.state.uid} userRef={userRef2}/>
           </div>
         );
     }
