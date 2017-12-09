@@ -70,7 +70,7 @@ export default class SignUpActivity extends React.Component {
 
         return (
             <div>
-                <div className="p-4 d-flex justify-content-end">
+                <div className="p-2 pl-3 d-flex justify-content-end">
                     <button className="mr-auto p-2 btn logo" onClick={() => {this.props.history.push("/")}}><i className="fa fa-leaf green fa-3x" aria-hidden="true"></i></button>
                 </div>
              <div className="cont d-flex justify-content-center" style={style}>
