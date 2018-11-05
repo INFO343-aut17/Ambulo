@@ -4,9 +4,9 @@ AMBULO
 
 | Team Member | Role                 |
 | ------------| -------------------- |
-| Anton Zheng | Dev Lead             |
+| Anton Zheng | User Experience Lead |
 | Jenny Yang  | Repo Master          |
-| Karen Lee   | User Experience Lead |
+| Karen Lee   | Dev Lead             |
 | Thoa Nguyen | Test Lead/PM         |
 
 <br />
